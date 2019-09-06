@@ -11,12 +11,14 @@ class Sampler(object):
             env,
             policy,
             max_path_length=1000,
-            selector=(lambda x: x)
+            selector=(lambda x: x),
+            monitor=None
     ):
         self.env = env
         self.policy = policy
         self.max_path_length = max_path_length
         self.selector = selector
+        self.monitor = monitor
 
     def collect(
             self,
@@ -60,6 +62,10 @@ class Sampler(object):
                 path["actions"].append(action)
                 path["rewards"].append(reward)
                 current_observation = next_observation
+
+                # decide to count the collected step towards the running total
+                if not evaluate and self.monitor is not None:
+                    self.monitor.increment()
 
                 # exit if the simulation has reached a terminal state
                 if done:

@@ -9,7 +9,8 @@ REQUIRED_PACKAGES = [
     'tensorflow-gpu==2.0.0-rc0',
     'numpy',
     'mujoco-py',
-    'gym[all]']
+    'gym[all]',
+    'matplotlib']
 
 
 setup(
