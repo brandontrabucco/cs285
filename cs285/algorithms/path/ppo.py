@@ -84,10 +84,11 @@ class SAC(PathAlgorithm):
                 policy_ratio = tf.exp(self.policy.log_prob(actions, observations) -
                                       self.old_policy.log_prob(actions, observations))
                 self.record("policy_ratio", tf.reduce_mean(policy_ratio))
-                policy_loss = -tf.minimum(
-                    policy_ratio * advantages,
-                    tf.clip_by_value(
-                        policy_ratio, 1 - self.epsilon,1 + self.epsilon) * advantages)
+                policy_loss = -tf.reduce_mean(
+                    tf.minimum(
+                        policy_ratio * advantages,
+                        tf.clip_by_value(
+                            policy_ratio, 1 - self.epsilon, 1 + self.epsilon) * advantages))
                 self.record("policy_loss", tf.reduce_mean(policy_loss))
 
             # BACK PROP GRADIENTS
