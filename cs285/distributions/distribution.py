@@ -52,3 +52,16 @@ class Distribution(ABC, tf.keras.models.Model):
         *inputs
     ):
         return NotImplemented
+
+    @abstractmethod
+    def log_prob(
+        self,
+        *inputs
+    ):
+        return NotImplemented
+
+    def prob(
+        self,
+        *inputs
+    ):
+        return tf.exp(self.log_prob(*inputs))

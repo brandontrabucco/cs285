@@ -35,3 +35,15 @@ class TanhGaussian(Gaussian):
             math.log(2.0)
             - gaussian_samples
             - tf.math.softplus(-2.0 * gaussian_samples), axis=(-1))
+
+    def log_prob(
+        self,
+        tanh_samples,
+        *inputs
+    ):
+        gaussian_samples = tf.math.atanh(tf.clip_by_value(tanh_samples, -0.99, 0.99))
+        log_probs = Gaussian.log_prob(self, gaussian_samples, *inputs)
+        return tanh_samples, log_probs - 2.0 * tf.reduce_sum(
+            math.log(2.0)
+            - gaussian_samples
+            - tf.math.softplus(-2.0 * gaussian_samples), axis=(-1))

@@ -33,9 +33,9 @@ class Gaussian(Distribution):
     ):
         mean, log_std = self.get_parameters(*inputs)
         std = tf.exp(log_std)
-        gaussian_actions = mean + tf.random.normal(tf.shape(mean)) * std
-        return gaussian_actions, tf.reduce_sum(
-            - ((gaussian_actions - mean) / std) ** 2
+        gaussian_samples = mean + tf.random.normal(tf.shape(mean)) * std
+        return gaussian_samples, tf.reduce_sum(
+            - ((gaussian_samples - mean) / std) ** 2
             - log_std
             - math.log(math.sqrt(2 * math.pi)), axis=(-1))
 
@@ -45,5 +45,17 @@ class Gaussian(Distribution):
     ):
         mean, log_std = self.get_parameters(*inputs)
         return mean, tf.reduce_sum(
+            - log_std
+            - math.log(math.sqrt(2 * math.pi)), axis=(-1))
+
+    def log_prob(
+        self,
+        gaussian_samples,
+        *inputs
+    ):
+        mean, log_std = self.get_parameters(*inputs)
+        std = tf.exp(log_std)
+        return tf.reduce_sum(
+            - ((gaussian_samples - mean) / std) ** 2
             - log_std
             - math.log(math.sqrt(2 * math.pi)), axis=(-1))

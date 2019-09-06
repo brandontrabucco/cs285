@@ -5,20 +5,15 @@ from cs285.algorithms.algorithm import Algorithm
 from abc import ABC
 
 
-class StepAlgorithm(Algorithm, ABC):
+class PathAlgorithm(Algorithm, ABC):
 
     def sample_batch(
             self,
             buffer
     ):
-        (observations,
-         actions,
-         rewards,
-         next_observations,
-         terminals) = buffer.sample_steps(self.batch_size)
+        observations, actions, rewards, terminals = buffer.sample_paths(self.batch_size)
         return (
             self.selector(observations),
             actions,
             rewards,
-            self.selector(next_observations),
             terminals)

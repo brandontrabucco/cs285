@@ -1,7 +1,7 @@
 """Author: Brandon Trabucco, Copyright 2019, MIT License"""
 
 
-from cs285.core.sampler import Sampler
+from cs285.core.data.sampler import Sampler
 import numpy as np
 import threading
 

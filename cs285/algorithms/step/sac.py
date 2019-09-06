@@ -1,7 +1,7 @@
 """Author: Brandon Trabucco, Copyright 2019, MIT License"""
 
 
-from cs285.algorithms.step_algorithm import StepAlgorithm
+from cs285.algorithms.step.step_algorithm import StepAlgorithm
 import tensorflow as tf
 import math
 
@@ -72,19 +72,13 @@ class SAC(StepAlgorithm):
             alpha = tf.exp(self.log_alpha)
             self.record("alpha", tf.reduce_mean(alpha))
 
-            ######################################
-            # SAMPLE ACTIONS FROM CURRENT POLICY #
-            ######################################
-
+            # SAMPLE ACTIONS FROM CURRENT POLICY
             sampled_actions, log_pi = self.policy.sample(observations)
             self.record("entropy", tf.reduce_mean(-log_pi))
             next_sampled_actions, next_log_pi = self.policy.sample(next_observations)
             self.record("next_entropy", tf.reduce_mean(-next_log_pi))
 
-            #################################
-            # BUILD Q FUNCTION TARGET VALUE #
-            #################################
-
+            # BUILD Q FUNCTION TARGET VALUE
             inputs = tf.concat([next_observations, next_sampled_actions], -1)
             target_qf1_value = self.target_qf1(inputs)
             self.record("target_qf1_value", tf.reduce_mean(target_qf1_value))
@@ -95,10 +89,7 @@ class SAC(StepAlgorithm):
                     tf.minimum(target_qf1_value, target_qf2_value) - alpha * next_log_pi))
             self.record("qf_targets", tf.reduce_mean(qf_targets))
 
-            #########################
-            # BUILD Q FUNCTION LOSS #
-            #########################
-
+            # BUILD Q FUNCTION LOSS
             inputs = tf.concat([observations, actions], -1)
             qf1_value = self.qf1(inputs)
             self.record("qf1_value", tf.reduce_mean(qf1_value))
@@ -109,10 +100,7 @@ class SAC(StepAlgorithm):
             qf2_loss = tf.reduce_mean(tf.keras.losses.logcosh(qf_targets, qf2_value))
             self.record("qf2_loss", qf2_loss)
 
-            #####################
-            # BUILD POLICY LOSS #
-            #####################
-
+            # BUILD POLICY LOSS
             inputs = tf.concat([observations, sampled_actions], -1)
             policy_qf1_value = self.qf1(inputs)
             self.record("policy_qf1_value", tf.reduce_mean(policy_qf1_value))
@@ -126,10 +114,7 @@ class SAC(StepAlgorithm):
                 log_pi + self.target_entropy))
             self.record("alpha_loss", alpha_loss)
 
-        #######################
-        # BACK PROP GRADIENTS #
-        #######################
-
+        # BACK PROP GRADIENTS
         qf1_gradients = tape.gradient(qf1_loss, self.qf1.trainable_variables)
         self.qf_optimizer.apply_gradients(zip(
             qf1_gradients, self.qf1.trainable_variables))
@@ -138,10 +123,7 @@ class SAC(StepAlgorithm):
         self.qf_optimizer.apply_gradients(zip(
             qf2_gradients, self.qf2.trainable_variables))
 
-        #########################
-        # DELAYED POLICY UPDATE #
-        #########################
-
+        # DELAYED POLICY UPDATE
         if self.inner_iteration % self.policy_delay == 0:
             alpha_gradients = tape.gradient(alpha_loss, [self.log_alpha])
             self.alpha_optimizer.apply_gradients(zip(
@@ -151,10 +133,7 @@ class SAC(StepAlgorithm):
             self.policy_optimizer.apply_gradients(zip(
                 policy_gradients, self.policy.trainable_variables))
 
-            #################################
-            # SOFT UPDATE TARGET PARAMETERS #
-            #################################
-
+            # SOFT UPDATE TARGET PARAMETERS
             self.target_qf1.set_weights([
                 self.tau * w1 + (1.0 - self.tau) * w2 for w1, w2 in zip(
                     self.qf1.get_weights(), self.target_qf1.get_weights())])
