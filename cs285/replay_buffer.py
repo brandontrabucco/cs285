@@ -28,7 +28,10 @@ class ReplayBuffer(object):
             x
     ):
         # used to initialize the replay buffer storage
-        return np.zeros([self.max_num_paths, self.max_path_length, *x.shape], dtype=np.float32)
+        return np.zeros([
+            self.max_num_paths,
+            self.max_path_length,
+            *x.shape], dtype=np.float32)
 
     def inflate(
             self,
@@ -79,17 +82,23 @@ class ReplayBuffer(object):
             batch_size
     ):
         # sample entire paths from the replay buffer (for on policy methods)
-        idx = np.random.choice(self.size, size=batch_size, replace=(self.size < batch_size))
+        idx = np.random.choice(
+            self.size,
+            size=batch_size,
+            replace=(self.size < batch_size))
 
         # note that observations can be dicts, tuples, sets, or lists
-        observations = nested_apply(lambda x: x[idx, ...], self.selector(self.observations))
+        observations = nested_apply(
+            lambda x: x[idx, ...],
+            self.selector(self.observations))
 
         # actions and rewards must be vectors and scalars respectively
         actions = self.actions[idx, ...]
         rewards = self.rewards[idx, :]
 
         # terminals indicates which states are valid states (1 if valid)
-        terminals = (np.arange(self.max_path_length)[np.newaxis, :] < self.tail[idx][:, np.newaxis]).astype(np.float32)
+        terminals = (np.arange(self.max_path_length)[np.newaxis, :] <
+                     self.tail[idx][:, np.newaxis]).astype(np.float32)
         return observations, actions, rewards * terminals, terminals
 
     def sample_steps(
@@ -103,7 +112,9 @@ class ReplayBuffer(object):
         ps = (positions[:, np.newaxis] < self.tail[np.newaxis, :]).astype(np.float32)
 
         # enumerate all steps available in the replay buffer
-        candidate_steps = np.stack(np.meshgrid(np.arange(self.max_num_paths), positions), axis=(-1)).reshape(-1, 2)
+        candidate_steps = np.stack(
+            np.meshgrid(np.arange(self.max_num_paths), positions),
+            axis=(-1)).reshape(-1, 2)
 
         # take indices into the replay buffer of the samples transitions
         idx = np.take(candidate_steps, np.random.choice(
@@ -113,7 +124,9 @@ class ReplayBuffer(object):
             p=(ps.reshape(-1) / ps.sum())), axis=0)
 
         # note that observations can be dicts, tuples, sets, or lists
-        observations = nested_apply(lambda x: x[idx[:, 0], idx[:, 1], ...], self.selector(self.observations))
+        observations = nested_apply(
+            lambda x: x[idx[:, 0], idx[:, 1], ...],
+            self.selector(self.observations))
 
         # actions and rewards must be vectors and scalars respectively
         actions = self.actions[idx[:, 0], idx[:, 1], ...]
@@ -123,5 +136,6 @@ class ReplayBuffer(object):
             self.selector(self.observations))
 
         # these terminals indicate which states are terminal states (1 if non terminal)
-        terminals = (positions[np.newaxis, :] + 1 < self.tail[:, np.newaxis]).astype(np.float32)[idx[:, 0], idx[:, 1]]
+        terminals = (positions[np.newaxis, :] + 1 <
+                     self.tail[:, np.newaxis]).astype(np.float32)[idx[:, 0], idx[:, 1]]
         return observations, actions, rewards, next_observations, terminals
