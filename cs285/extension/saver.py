@@ -12,6 +12,7 @@ class Saver(object):
         logging_dir,
         **models
     ):
+        # create the folder in which the saved models are placed
         tf.io.gfile.makedirs(logging_dir)
         self.logging_dir = logging_dir
         self.models = models
@@ -19,6 +20,7 @@ class Saver(object):
     def save(
         self
     ):
+        # save the models using the keras checkpoint system
         for name, model in self.models.items():
             tf.keras.models.save_model(
                 model,
@@ -29,6 +31,7 @@ class Saver(object):
     def load(
         self
     ):
+        # load the models using the keras checkpoint system
         for name, model in self.models.items():
             model_path = os.path.join(self.logging_dir, name + ".ckpt")
             if tf.io.gfile.exists(model_path):

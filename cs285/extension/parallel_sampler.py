@@ -1,7 +1,7 @@
 """Author: Brandon Trabucco, Copyright 2019, MIT License"""
 
 
-from cs285.sampler import Sampler
+from cs285.core.sampler import Sampler
 import numpy as np
 import threading
 
@@ -59,7 +59,7 @@ class ParallelSampler(object):
                 paths,
                 mean_returns,
                 steps_collected,
-                # the first thread may have extra episodes to collect
+                # the first thread may have extension episodes to collect
                 num_episodes // self.num_threads + (num_episodes % self.num_threads if i == 0 else 0),
                 evaluate,
                 render,
