@@ -52,6 +52,7 @@ if __name__ == "__main__":
         monitor=monitor)
 
     replay_buffer = DaggerRelabeler(
+        expert_policy,
         ReplayBuffer(
             max_path_length=1000,
             max_num_paths=1000,
