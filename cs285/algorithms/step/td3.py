@@ -27,6 +27,7 @@ class TD3(StepAlgorithm):
         qf_optimizer_kwargs=None,
         **kwargs,
     ):
+        # train a policy using twin delayed deep deterministic policy gradient
         StepAlgorithm.__init__(self, **kwargs)
         self.policy = policy
         self.target_policy = target_policy
@@ -35,22 +36,28 @@ class TD3(StepAlgorithm):
         self.target_qf1 = target_qf1
         self.target_qf2 = target_qf2
 
+        # control the scale and decay of the reward
         self.reward_scale = reward_scale
         self.discount = discount
+
+        # control the parameters of td3
         self.tau = tau
         self.target_noise = target_noise
         self.target_clipping = target_clipping
         self.policy_delay = policy_delay
 
+        # build the optimizer for the policy weights
         if policy_optimizer_kwargs is None:
             policy_optimizer_kwargs = dict(lr=0.0001, clipnorm=1.0)
         self.policy_optimizer = policy_optimizer_class(
             **policy_optimizer_kwargs)
 
+        # build an optimizer for the q functions
         if qf_optimizer_kwargs is None:
             qf_optimizer_kwargs = dict(lr=0.001, clipnorm=1.0)
         self.qf_optimizer = qf_optimizer_class(**qf_optimizer_kwargs)
 
+        # used to determine when to update the target networks
         self.inner_iteration = 0
 
     def update_algorithm(

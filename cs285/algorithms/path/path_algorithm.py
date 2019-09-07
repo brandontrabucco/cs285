@@ -11,6 +11,7 @@ class PathAlgorithm(Algorithm, ABC):
             self,
             buffer
     ):
+        # the path algorithm samples entire paths from the replay buffer
         observations, actions, rewards, terminals = buffer.sample_paths(self.batch_size)
         return (
             self.selector(observations),

@@ -11,6 +11,7 @@ class Distribution(ABC, tf.keras.models.Model):
         self,
         model
     ):
+        # wrap around a keras model to make it probabilistic
         self.model = model
 
     def __setattr__(
@@ -18,6 +19,7 @@ class Distribution(ABC, tf.keras.models.Model):
         attr,
         value
     ):
+        # pass attribute assignments to the keras model
         if not attr == "model":
             setattr(self.model, attr, value)
         else:
@@ -27,6 +29,7 @@ class Distribution(ABC, tf.keras.models.Model):
         self,
         attr
     ):
+        # pass attribute lookups to the keras model
         if not attr == "model":
             return getattr(self.model, attr)
         else:
@@ -64,4 +67,5 @@ class Distribution(ABC, tf.keras.models.Model):
         self,
         *inputs
     ):
+        # compute the probability density of the inputs
         return tf.exp(self.log_prob(*inputs))

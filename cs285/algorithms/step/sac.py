@@ -29,6 +29,7 @@ class SAC(StepAlgorithm):
         alpha_optimizer_kwargs=None,
         **kwargs,
     ):
+        # train a policy using twin soft actor critic
         StepAlgorithm.__init__(self, **kwargs)
         self.policy = policy
         self.qf1 = qf1
@@ -36,27 +37,34 @@ class SAC(StepAlgorithm):
         self.target_qf1 = target_qf1
         self.target_qf2 = target_qf2
 
+        # control the scale and decay of rewards
         self.reward_scale = reward_scale
         self.discount = discount
+
+        # control the parameters of sac
         self.tau = tau
         self.policy_delay = policy_delay
         self.target_entropy = target_entropy
         self.log_alpha = tf.Variable(math.log(abs(initial_alpha)), dtype=tf.float32)
 
+        # build an optimizer for the q function
         if qf_optimizer_kwargs is None:
             qf_optimizer_kwargs = dict(lr=0.001, clipnorm=1.0)
         self.qf_optimizer = qf_optimizer_class(**qf_optimizer_kwargs)
 
+        # build an optimizer for the policy
         if policy_optimizer_kwargs is None:
             policy_optimizer_kwargs = dict(lr=0.0001, clipnorm=1.0)
         self.policy_optimizer = policy_optimizer_class(
             **policy_optimizer_kwargs)
 
+        # build an optimizer for the alpha factor
         if alpha_optimizer_kwargs is None:
             alpha_optimizer_kwargs = dict(lr=0.0001, clipnorm=1.0)
         self.alpha_optimizer = alpha_optimizer_class(
             **alpha_optimizer_kwargs)
 
+        # used to track when to update the target networks
         self.inner_iteration = 0
 
     def update_algorithm(

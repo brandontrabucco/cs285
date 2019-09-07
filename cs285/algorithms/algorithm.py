@@ -15,12 +15,21 @@ class Algorithm(ABC):
             monitor=None,
             logging_prefix=""
     ):
+        # control how often the algorithm updates
         self.update_every = update_every
         self.update_after = update_after
+
+        # batch size for samples form replay buffer
         self.batch_size = batch_size
+
+        # select into the observation dict
         self.selector = selector
+
+        # logging
         self.monitor = monitor
         self.logging_prefix = logging_prefix
+
+        # necessary for update_every and update_after
         self.iteration = 0
         self.last_update_iteration = 0
 
@@ -29,6 +38,7 @@ class Algorithm(ABC):
             key,
             value
     ):
+        # record a value using the monitor
         if self.monitor is not None:
             self.monitor.record(
                 self.logging_prefix + key, value)
@@ -51,9 +61,14 @@ class Algorithm(ABC):
             self,
             buffer
     ):
+        # called by the trainer to train the algorithm
         self.iteration += 1
+
+        # only train on certain steps
         if (self.iteration >= self.update_after) and (
                 self.iteration -
                 self.last_update_iteration >= self.update_every):
             self.last_update_iteration = self.iteration
+
+            # samples are pulled from the replay buffer on the fly
             self.update_algorithm(*self.sample_batch(buffer))

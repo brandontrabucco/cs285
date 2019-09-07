@@ -11,6 +11,7 @@ class StepAlgorithm(Algorithm, ABC):
             self,
             buffer
     ):
+        # the step algorithms samples transitions rather tha full paths
         observations, actions, rewards, next_observations, terminals = buffer.sample_steps(self.batch_size)
         return (
             self.selector(observations),

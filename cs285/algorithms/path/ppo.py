@@ -6,7 +6,7 @@ from cs285 import discounted_sum
 import tensorflow as tf
 
 
-class SAC(PathAlgorithm):
+class PPO(PathAlgorithm):
 
     def __init__(
         self,
@@ -25,22 +25,29 @@ class SAC(PathAlgorithm):
         policy_optimizer_kwargs=None,
         **kwargs,
     ):
+        # train a policy using proximal policy optimization
         PathAlgorithm.__init__(self, **kwargs)
         self.policy = policy
         self.old_policy = old_policy
         self.vf = vf
 
+        # control the scale and decay of the reward
         self.reward_scale = reward_scale
         self.discount = discount
+
+        # control how ppo works internally
         self.epsilon = epsilon
         self.lamb = lamb
         self.off_policy_updates = off_policy_updates
         self.critic_updates = critic_updates
 
+        # build an optimizer for the value function weights
         if vf_optimizer_kwargs is None:
-            vf_optimizer_kwargs = dict(lr=0.001, clipnorm=1.0)
-        self.vf_optimizer = vf_optimizer_class(**vf_optimizer_kwargs)
+            vf_optimizer_kwargs = dict(lr=0.0001, clipnorm=1.0)
+        self.vf_optimizer = vf_optimizer_class(
+            **vf_optimizer_kwargs)
 
+        # build an optimizer for the policy weights
         if policy_optimizer_kwargs is None:
             policy_optimizer_kwargs = dict(lr=0.0001, clipnorm=1.0)
         self.policy_optimizer = policy_optimizer_class(
@@ -53,6 +60,7 @@ class SAC(PathAlgorithm):
         rewards,
         terminals
     ):
+        # train the value function using the discounted return
         for i in range(self.critic_updates):
             with tf.GradientTape() as tape:
 
@@ -69,6 +77,7 @@ class SAC(PathAlgorithm):
             self.qf_optimizer.apply_gradients(zip(
                 vf_gradients, self.vf.trainable_variables))
 
+        # train the policy using generalized advantage estimation
         self.old_policy.set_weights(self.policy.get_weights())
         for i in range(self.off_policy_updates):
             with tf.GradientTape() as tape:
@@ -80,10 +89,12 @@ class SAC(PathAlgorithm):
                 advantages = discounted_sum(delta_v, self.discount * self.lamb)
                 self.record("advantages", tf.reduce_mean(advantages))
 
-                # COMPUTE SURROGATE POLICY LOSS
+                # COMPUTE IMPORTANCE SAMPLING POLICY RATIO
                 policy_ratio = tf.exp(self.policy.log_prob(actions, observations) -
                                       self.old_policy.log_prob(actions, observations))
                 self.record("policy_ratio", tf.reduce_mean(policy_ratio))
+
+                # COMPUTE CLIPPED SURROGATE POLICY LOSS
                 policy_loss = -tf.reduce_mean(
                     tf.minimum(
                         policy_ratio * advantages,
