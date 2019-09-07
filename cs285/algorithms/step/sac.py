@@ -1,7 +1,7 @@
 """Author: Brandon Trabucco, Copyright 2019, MIT License"""
 
 
-from cs285.algorithms.step.step_algorithm import StepAlgorithm
+from cs285.algorithms.step_algorithm import StepAlgorithm
 import tensorflow as tf
 import math
 

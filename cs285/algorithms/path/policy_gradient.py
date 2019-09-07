@@ -1,7 +1,7 @@
 """Author: Brandon Trabucco, Copyright 2019, MIT License"""
 
 
-from cs285.algorithms.path.path_algorithm import PathAlgorithm
+from cs285.algorithms.path_algorithm import PathAlgorithm
 from cs285 import discounted_sum
 import tensorflow as tf
 

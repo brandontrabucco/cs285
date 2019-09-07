@@ -8,8 +8,7 @@ class Trainer(object):
 
     def __init__(
         self,
-        eval_sampler,
-        explore_sampler,
+        sampler,
         buffer,
         algorithm,
         num_epochs=1000,
@@ -22,8 +21,7 @@ class Trainer(object):
         monitor=None
     ):
         # samplers are for collecting data
-        self.eval_sampler = eval_sampler
-        self.explore_sampler = explore_sampler
+        self.sampler = sampler
 
         # buffers are for storing data
         self.buffer = buffer
@@ -54,8 +52,8 @@ class Trainer(object):
             self.saver.load()
 
         # warm up the buffer by collecting initial samples
-        warm_up_paths, warm_up_return, warm_up_steps = self.explore_sampler.collect(
-            self.num_episodes_before_train, buffer=self.buffer)
+        warm_up_paths, warm_up_return, warm_up_steps = self.sampler.collect(
+            self.num_episodes_before_train, evaluate=False)
 
         # insert these samples into the buffer
         for path in warm_up_paths:
@@ -66,8 +64,8 @@ class Trainer(object):
         for epoch in range(self.num_epochs):
             # collect paths every round for exploration
             start_collect_time = time.time()
-            explore_paths, explore_return, explore_steps = self.explore_sampler.collect(
-                self.num_episodes_per_epoch, buffer=self.buffer)
+            explore_paths, explore_return, explore_steps = self.sampler.collect(
+                self.num_episodes_per_epoch, evaluate=False)
 
             # insert the exploration paths into the buffer
             for path in explore_paths:
@@ -82,8 +80,8 @@ class Trainer(object):
 
             # evaluate the policy sometimes
             if epoch % self.num_epochs_per_eval == 0:
-                eval_paths, eval_return, eval_steps = self.eval_sampler.collect(
-                    self.num_episodes_per_eval)
+                eval_paths, eval_return, eval_steps = self.sampler.collect(
+                    self.num_episodes_per_eval, evaluate=True)
 
                 # record the mean return of the policy
                 if self.monitor is not None:

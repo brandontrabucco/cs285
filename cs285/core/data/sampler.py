@@ -8,13 +8,13 @@ class Sampler(object):
 
     def __init__(
             self,
-            env,
+            make_env,
             policy,
             max_path_length=1000,
             selector=(lambda x: x),
             monitor=None
     ):
-        self.env = env
+        self.env = make_env()
         self.policy = policy
         self.max_path_length = max_path_length
         self.selector = selector
