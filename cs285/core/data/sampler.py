@@ -9,13 +9,15 @@ class Sampler(object):
     def __init__(
             self,
             make_env,
-            policy,
+            make_policy,
+            master_policy,
             max_path_length=1000,
             selector=(lambda x: x),
             monitor=None
     ):
         self.env = make_env()
-        self.policy = policy
+        self.worker_policy = make_policy()
+        self.master_policy = master_policy
         self.max_path_length = max_path_length
         self.selector = selector
         self.monitor = monitor
@@ -27,7 +29,10 @@ class Sampler(object):
             render=False,
             **render_kwargs
     ):
-        # collect paths for the replay buffer
+        # copy parameters from the master policy to the worker
+        self.worker_policy.set_weights(self.master_policy.get_weights())
+
+        # keep track of the path variables and returns
         paths = []
         mean_return = 0.0
 

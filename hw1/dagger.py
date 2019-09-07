@@ -31,22 +31,20 @@ if __name__ == "__main__":
     observation_dim = env.observation_space.spaces[observation_key].low.size
     action_dim = env.action_space.low.size
 
-    policy = Gaussian(
-        dense(
-            observation_dim,
-            action_dim,
-            hidden_size=256,
-            num_hidden_layers=2), std=0.1)
+    def make_policy():
+        return Gaussian(
+            dense(
+                observation_dim,
+                action_dim,
+                hidden_size=256,
+                num_hidden_layers=2), std=0.1)
 
-    expert_policy = Gaussian(
-        dense(
-            observation_dim,
-            action_dim,
-            hidden_size=256,
-            num_hidden_layers=2), std=0.1)
+    policy = make_policy()
+    expert_policy = make_policy()
 
     sampler = ParallelSampler(
         make_env,
+        make_policy,
         policy,
         num_threads=10,
         max_path_length=1000,
