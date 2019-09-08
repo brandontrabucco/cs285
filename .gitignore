@@ -3,5 +3,6 @@
 events.out.tfevents.**
 *.egg-info/
 *.ckpt*
+*.buffer*
 checkpoint
 *.out
