@@ -12,14 +12,14 @@ class Sampler(object):
             make_policy,
             master_policy,
             max_path_length=1000,
-            selector=(lambda x: x),
+            selector=None,
             monitor=None
     ):
         self.env = make_env()
         self.worker_policy = make_policy()
         self.master_policy = master_policy
         self.max_path_length = max_path_length
-        self.selector = selector
+        self.selector = selector if selector is not None else (lambda x: x)
         self.monitor = monitor
 
     def collect(
@@ -38,15 +38,15 @@ class Sampler(object):
 
         # collect num_episodes amount of paths and track various things
         for episode in range(num_episodes):
-            current_observation = self.env.reset()
-            path = {"observations": [], "actions": [], "rewards": []}
+            observation = self.env.reset()
             path_return = 0.0
+            path = {"observations": [], "actions": [], "rewards": []}
 
             # unroll the episode until done or max_path_length is attained
             for i in range(self.max_path_length):
 
                 # select the correct input for the policy (if obs is not a tensor)
-                inputs = self.selector(current_observation)[np.newaxis, ...]
+                inputs = self.selector(observation)[np.newaxis, ...]
 
                 # choose to use the stochastic or deterministic policy
                 if evaluate:
@@ -63,10 +63,10 @@ class Sampler(object):
                     self.env.render(**render_kwargs)
 
                 # collect samples into the ongoing path lists
-                path["observations"].append(current_observation)
+                path["observations"].append(observation)
                 path["actions"].append(action)
                 path["rewards"].append(reward)
-                current_observation = next_observation
+                observation = next_observation
 
                 # decide to count the collected step towards the running total
                 if not evaluate and self.monitor is not None:

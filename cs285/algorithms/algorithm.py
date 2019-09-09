@@ -11,7 +11,7 @@ class Algorithm(ABC):
             update_every=1,
             update_after=1,
             batch_size=32,
-            selector=(lambda x: x),
+            selector=None,
             monitor=None,
             logging_prefix=""
     ):
@@ -23,7 +23,7 @@ class Algorithm(ABC):
         self.batch_size = batch_size
 
         # select into the observation dict
-        self.selector = selector
+        self.selector = selector if selector is not None else (lambda x: x)
 
         # logging
         self.monitor = monitor

@@ -33,31 +33,56 @@ if __name__ == "__main__":
 
     def make_policy():
         return Gaussian(
-            dense(observation_dim, action_dim,
-                  hidden_size=256, num_hidden_layers=2), std=0.1)
+            dense(
+                observation_dim,
+                action_dim,
+                hidden_size=256,
+                num_hidden_layers=2),
+            std=0.1)
 
     policy = make_policy()
     expert_policy = make_policy()
 
     sampler = ParallelSampler(
-        make_env, make_policy, policy,
-        num_threads=10, max_path_length=1000, selector=selector, monitor=monitor)
+        make_env,
+        make_policy,
+        policy,
+        num_threads=10,
+        max_path_length=10,
+        selector=selector,
+        monitor=monitor)
 
     replay_buffer = DaggerRelabeler(
         expert_policy,
-        ReplayBuffer(max_path_length=1000, max_num_paths=1000, selector=selector),
-        expert_selector=selector, relabel_probability=1.0)
+        ReplayBuffer(
+            max_path_length=10,
+            max_num_paths=1000,
+            selector=selector),
+        expert_selector=selector,
+        relabel_probability=1.0)
 
     saver = Saver(
         logging_dir,
-        policy=policy, expert_policy=expert_policy, replay_buffer=replay_buffer)
+        policy=policy,
+        expert_policy=expert_policy,
+        replay_buffer=replay_buffer)
 
-    algorithm = BehaviorCloning(policy)
+    algorithm = BehaviorCloning(
+        policy,
+        batch_size=32,
+        monitor=monitor)
 
     trainer = Trainer(
-        sampler, replay_buffer, algorithm,
-        num_epochs=1000, num_episodes_per_epoch=1, num_trains_per_epoch=1000,
-        num_episodes_before_train=0, num_epochs_per_eval=10, num_episodes_per_eval=10,
-        saver=saver, monitor=monitor)
+        sampler,
+        replay_buffer,
+        algorithm,
+        num_epochs=1000,
+        num_episodes_per_epoch=1,
+        num_trains_per_epoch=1000,
+        num_episodes_before_train=1,
+        num_epochs_per_eval=10,
+        num_episodes_per_eval=10,
+        saver=saver,
+        monitor=monitor)
 
     trainer.train()

@@ -6,3 +6,4 @@ events.out.tfevents.**
 *.buffer*
 checkpoint
 *.out
+step

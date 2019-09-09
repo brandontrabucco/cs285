@@ -34,7 +34,18 @@ class Saver(object):
         # save the replay buffer to the disk
         if self.replay_buffer is not None:
             with open(os.path.join(self.logging_dir, "replay.buffer"),  "wb") as f:
-                pkl.dump(self.replay_buffer, f)
+
+                # convert replay buffer into a pickle able form
+                replay_buffer = dict(
+                    size=self.replay_buffer.size,
+                    head=self.replay_buffer.head,
+                    tail=self.replay_buffer.tail,
+                    observations=self.replay_buffer.observations,
+                    actions=self.replay_buffer.actions,
+                    rewards=self.replay_buffer.rewards)
+
+                # save the replay buffer to a file
+                pkl.dump(replay_buffer, f)
 
     def load(
         self
@@ -54,12 +65,9 @@ class Saver(object):
                     replay_buffer = pkl.load(f)
 
                     # assign the state of the loaded replay buffer to the current replay buffer
-                    self.replay_buffer.max_path_length = replay_buffer.max_path_length
-                    self.replay_buffer.max_num_paths = replay_buffer.max_num_paths
-                    self.replay_buffer.selector = replay_buffer.selector
-                    self.replay_buffer.size = replay_buffer.size
-                    self.replay_buffer.head = replay_buffer.head
-                    self.replay_buffer.tail = replay_buffer.tail
-                    self.replay_buffer.observations = replay_buffer.observations
-                    self.replay_buffer.actions = replay_buffer.actions
-                    self.replay_buffer.rewards = replay_buffer.rewards
+                    self.replay_buffer.size = replay_buffer["size"]
+                    self.replay_buffer.head = replay_buffer["head"]
+                    self.replay_buffer.tail = replay_buffer["tail"]
+                    self.replay_buffer.observations = replay_buffer["observations"]
+                    self.replay_buffer.actions = replay_buffer["actions"]
+                    self.replay_buffer.rewards = replay_buffer["rewards"]

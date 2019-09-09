@@ -90,7 +90,7 @@ class Relabeler(object):
     ):
         # relabel steps as they exit the replay buffer
         return self.relabel_sample_steps(
-            *self.replay_buffer.sample_paths(batch_size))
+            *self.replay_buffer.sample_steps(batch_size))
 
     def relabel_mask(
             self,

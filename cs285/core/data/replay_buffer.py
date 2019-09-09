@@ -15,7 +15,7 @@ class ReplayBuffer(object):
     ):
         self.max_path_length = max_path_length
         self.max_num_paths = max_num_paths
-        self.selector = selector if selector is None else (lambda x: x)
+        self.selector = selector if selector is not None else (lambda x: x)
         self.size = 0
         self.head = 0
         self.tail = np.zeros([self.max_num_paths], dtype=np.int32)
@@ -53,13 +53,6 @@ class ReplayBuffer(object):
         for tail, y in enumerate(path[:self.max_path_length]):
             structure[self.head, tail, ...] = y
 
-        # keep track of the length of a path
-        self.tail[self.head] = len(path[:self.max_path_length])
-
-        # keep track of the size of the replay buffer and the next writable slot
-        self.head = (self.head + 1) % self.max_num_paths
-        self.size = min(self.size + 1, self.max_num_paths)
-
     def insert_path(
             self,
             observations,
@@ -71,11 +64,26 @@ class ReplayBuffer(object):
             self.inflate(observations[0], actions[0], rewards[0])
 
         # insert samples along a path into the replay buffer
-        nested_apply(self.insert_path_backend, self.observations, observations)
+        for tail, (x, y, z) in enumerate(zip(
+                observations[:self.max_path_length],
+                actions[:self.max_path_length],
+                rewards[:self.max_path_length])):
 
-        # actions and rewards must be vectors and scalars respectively
-        self.insert_path_backend(self.actions, actions)
-        self.insert_path_backend(self.rewards, rewards)
+            # necessary for the nested observation dictionary
+            def insert_backend(structure, data):
+                structure[self.head, tail, ...] = data
+
+            # assign all steps into the buffer
+            nested_apply(insert_backend, self.observations, x)
+            insert_backend(self.actions, y)
+            insert_backend(self.rewards, z)
+
+        # keep track of the length of a path
+        self.tail[self.head] = len(rewards[:self.max_path_length])
+
+        # keep track of the size of the replay buffer and the next writable slot
+        self.head = (self.head + 1) % self.max_num_paths
+        self.size = min(self.size + 1, self.max_num_paths)
 
     def sample_paths(
             self,
@@ -132,7 +140,7 @@ class ReplayBuffer(object):
         actions = self.actions[idx[:, 0], idx[:, 1], ...]
         rewards = self.rewards[idx[:, 0], idx[:, 1]]
         next_observations = nested_apply(
-            lambda x: x[idx[:, 0], np.minimum(idx[:, 1] + 1, self.max_path_length), ...],
+            lambda x: x[idx[:, 0], np.minimum(idx[:, 1] + 1, self.max_path_length - 1), ...],
             self.selector(self.observations))
 
         # these terminals indicate which states are terminal states (1 if non terminal)
