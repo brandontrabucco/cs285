@@ -50,9 +50,9 @@ class Sampler(object):
 
                 # choose to use the stochastic or deterministic policy
                 if evaluate:
-                    action = self.policy.expected_value(inputs)[0][0, ...]
+                    action = self.worker_policy.expected_value(inputs)[0][0, ...]
                 else:
-                    action = self.policy.sample(inputs)[0][0, ...]
+                    action = self.worker_policy.sample(inputs)[0][0, ...]
 
                 # update the environment
                 next_observation, reward, done, info = self.env.step(action)

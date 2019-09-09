@@ -48,6 +48,10 @@ class ParallelSampler(object):
             render=False,
             **render_kwargs
     ):
+        # only spawn threads if paths need to be collected
+        if num_episodes == 0:
+            return [], 0.0, 0
+
         # collect many paths in parallel
         paths = []
         mean_returns = []

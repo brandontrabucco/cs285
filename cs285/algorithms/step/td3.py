@@ -82,9 +82,9 @@ class TD3(StepAlgorithm):
 
             # BUILD Q FUNCTION TARGET VALUE
             inputs = tf.concat([next_observations, next_noisy_actions], -1)
-            target_qf1_value = self.target_qf1(inputs)
+            target_qf1_value = self.target_qf1(inputs)[..., 0]
             self.record("target_qf1_value", tf.reduce_mean(target_qf1_value))
-            target_qf2_value = self.target_qf2(inputs)
+            target_qf2_value = self.target_qf2(inputs)[..., 0]
             self.record("target_qf2_value", tf.reduce_mean(target_qf2_value))
             qf_targets = tf.stop_gradient(
                 self.reward_scale * rewards + terminals * self.discount * (
@@ -93,9 +93,9 @@ class TD3(StepAlgorithm):
 
             # BUILD Q FUNCTION LOSS
             inputs = tf.concat([observations, actions], -1)
-            qf1_value = self.qf1(inputs)
+            qf1_value = self.qf1(inputs)[..., 0]
             self.record("qf1_value", tf.reduce_mean(qf1_value))
-            qf2_value = self.qf2(inputs)
+            qf2_value = self.qf2(inputs)[..., 0]
             self.record("qf2_value", tf.reduce_mean(qf2_value))
             qf1_loss = tf.reduce_mean(tf.keras.losses.logcosh(qf_targets, qf1_value))
             self.record("qf1_loss", qf1_loss)
@@ -104,9 +104,9 @@ class TD3(StepAlgorithm):
 
             # BUILD POLICY LOSS
             inputs = tf.concat([observations, mean_actions], -1)
-            policy_qf1_value = self.qf1(inputs)
+            policy_qf1_value = self.qf1(inputs)[..., 0]
             self.record("policy_qf1_value", tf.reduce_mean(policy_qf1_value))
-            policy_qf2_value = self.qf2(inputs)
+            policy_qf2_value = self.qf2(inputs)[..., 0]
             self.record("policy_qf2_value", tf.reduce_mean(policy_qf2_value))
             policy_loss = -tf.reduce_mean(
                 tf.minimum(policy_qf1_value, policy_qf2_value))

@@ -48,9 +48,9 @@ class PolicyGradient(PathAlgorithm):
             self.record("advantages", tf.reduce_mean(advantages))
 
             # COMPUTE SURROGATE POLICY LOSS
-            policy_log_prob = self.policy.log_prob(actions, observations) * advantages
-            self.record("policy_ratio", tf.reduce_mean(policy_log_prob))
-            policy_loss = -tf.reduce_mean(policy_log_prob)
+            policy_log_prob = self.policy.log_prob(actions, observations)
+            self.record("policy_log_prob", tf.reduce_mean(policy_log_prob))
+            policy_loss = -tf.reduce_mean(policy_log_prob * advantages)
             self.record("policy_loss", tf.reduce_mean(policy_loss))
 
         # BACK PROP GRADIENTS
