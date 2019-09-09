@@ -12,9 +12,13 @@ from cs285.core.saver import Saver
 from cs285.algorithms.step.behavior_cloning import BehaviorCloning
 from cs285.core.trainer import Trainer
 from cs285.relabelers.dagger_relabeler import DaggerRelabeler
+import tensorflow as tf
 
 
 if __name__ == "__main__":
+
+    for gpu in tf.config.experimental.list_physical_devices('GPU'):
+        tf.config.experimental.set_memory_growth(gpu, True)
 
     logging_dir = "./dagger"
     observation_key = "observation"
