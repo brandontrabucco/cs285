@@ -31,6 +31,8 @@ if __name__ == "__main__":
     parser.add_argument("--output_policy_file", type=str)
     args = parser.parse_args()
 
+    tf.io.gfile.makedirs(args.output_policy_file)
+
     # load the expert policy from a file
     with tf.io.gfile.GFile(args.expert_policy_file, "rb") as f:
         data = pkl.load(f)

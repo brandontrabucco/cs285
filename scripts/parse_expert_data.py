@@ -16,6 +16,8 @@ if __name__ == "__main__":
     parser.add_argument("--max_path_length", type=int, default=1000)
     args = parser.parse_args()
 
+    tf.io.gfile.makedirs(args.replay_buffer_file)
+
     # load the expert data from a file
     with tf.io.gfile.GFile(args.expert_data_file, "rb") as f:
         x = pkl.load(f)
