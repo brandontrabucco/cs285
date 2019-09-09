@@ -29,7 +29,7 @@ class Saver(object):
                 model,
                 os.path.join(self.logging_dir, name + ".ckpt"),
                 overwrite=True,
-                include_optimizer=True)
+                include_optimizer=False)
 
         # save the replay buffer to the disk
         if self.replay_buffer is not None:
