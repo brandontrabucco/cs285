@@ -21,6 +21,7 @@ if __name__ == "__main__":
         tf.config.experimental.set_memory_growth(gpu, True)
 
     logging_dir = "./dagger"
+    expert_policy_ckpt = "./dagger/expert_policy.ckpt"
     observation_key = "observation"
 
     monitor = Monitor(logging_dir)
@@ -41,11 +42,10 @@ if __name__ == "__main__":
                 observation_dim,
                 action_dim,
                 hidden_size=256,
-                num_hidden_layers=2),
-            std=0.1)
+                num_hidden_layers=2), std=0.1)
 
     policy = make_policy()
-    expert_policy = make_policy()
+    expert_policy = tf.keras.models.load_model(expert_policy_ckpt, compile=False)
 
     sampler = ParallelSampler(
         make_env,

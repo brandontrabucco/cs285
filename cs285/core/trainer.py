@@ -47,32 +47,26 @@ class Trainer(object):
     def train(
         self
     ):
-        print("starting")
         # train the model and load pre trained networks
         if self.saver is not None:
             self.saver.load()
 
-        print("warming up")
         # warm up the buffer by collecting initial samples
         warm_up_paths, warm_up_return, warm_up_steps = self.sampler.collect(
             self.num_episodes_before_train, evaluate=False)
 
-        print("inserting")
         # insert these samples into the buffer
         for path in warm_up_paths:
             self.buffer.insert_path(
                 path["observations"], path["actions"], path["rewards"])
 
-        print("training")
         # train for num_epochs rounds
         for epoch in range(self.num_epochs):
             # collect paths every round for exploration
             start_collect_time = time.time()
-            print("collecting")
             explore_paths, explore_return, explore_steps = self.sampler.collect(
                 self.num_episodes_per_epoch, evaluate=False)
 
-            print("inserting")
             # insert the exploration paths into the buffer
             for path in explore_paths:
                 self.buffer.insert_path(
@@ -84,7 +78,6 @@ class Trainer(object):
                     "steps_per_second",
                     explore_steps / (time.time() - start_collect_time))
 
-            print("evaluating")
             # evaluate the policy sometimes
             if epoch % self.num_epochs_per_eval == 0:
                 eval_paths, eval_return, eval_steps = self.sampler.collect(
@@ -102,7 +95,6 @@ class Trainer(object):
                     if self.monitor is not None:
                         self.monitor.save_step()
 
-            print("fitting model")
             # train the model for num_trains_per_epoch steps per round
             for _i in range(self.num_trains_per_epoch if
                             self.num_trains_per_epoch > 0 else explore_steps):

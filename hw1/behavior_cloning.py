@@ -43,7 +43,6 @@ if __name__ == "__main__":
                 num_hidden_layers=2), std=0.1)
 
     policy = make_policy()
-    expert_policy = make_policy()
 
     sampler = ParallelSampler(
         make_env,
@@ -62,7 +61,6 @@ if __name__ == "__main__":
     saver = Saver(
         logging_dir,
         policy=policy,
-        expert_policy=expert_policy,
         replay_buffer=replay_buffer)
 
     algorithm = BehaviorCloning(policy)
