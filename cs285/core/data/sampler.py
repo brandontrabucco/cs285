@@ -68,10 +68,6 @@ class Sampler(object):
                 path["rewards"].append(reward)
                 observation = next_observation
 
-                # decide to count the collected step towards the running total
-                if not evaluate and self.monitor is not None:
-                    self.monitor.increment()
-
                 # exit if the simulation has reached a terminal state
                 if done:
                     break

@@ -56,7 +56,8 @@ if __name__ == "__main__":
     replay_buffer = ReplayBuffer(
         max_path_length=1000,
         max_num_paths=1000,
-        selector=selector)
+        selector=selector,
+        monitor=monitor)
 
     saver = Saver(
         logging_dir,
@@ -65,7 +66,7 @@ if __name__ == "__main__":
 
     algorithm = BehaviorCloning(
         policy,
-        batch_size=32,
+        batch_size=256,
         monitor=monitor)
 
     trainer = Trainer(
@@ -74,7 +75,7 @@ if __name__ == "__main__":
         algorithm,
         num_epochs=1000,
         num_episodes_per_epoch=0,
-        num_trains_per_epoch=100,
+        num_trains_per_epoch=1,
         num_episodes_before_train=0,
         num_epochs_per_eval=1,
         num_episodes_per_eval=10,

@@ -11,13 +11,16 @@ class ReplayBuffer(object):
             self,
             max_path_length=1000,
             max_num_paths=1000,
-            selector=None
+            selector=None,
+            monitor=None
     ):
         self.max_path_length = max_path_length
         self.max_num_paths = max_num_paths
         self.selector = selector if selector is not None else (lambda x: x)
-        self.size = 0
+        self.monitor = monitor
         self.head = 0
+        self.size = 0
+        self.total_size = 0
         self.tail = np.zeros([self.max_num_paths], dtype=np.int32)
         self.observations = None
         self.actions = None
@@ -43,6 +46,11 @@ class ReplayBuffer(object):
         self.observations = nested_apply(self.inflate_backend, observation)
         self.actions = self.inflate_backend(action)
         self.rewards = self.inflate_backend(reward)
+
+        if self.monitor is not None:
+            self.monitor.record("head", self.head)
+            self.monitor.record("size", self.size)
+            self.monitor.record("total_size", self.total_size)
 
     def insert_path_backend(
             self,
@@ -84,6 +92,12 @@ class ReplayBuffer(object):
         # keep track of the size of the replay buffer and the next writable slot
         self.head = (self.head + 1) % self.max_num_paths
         self.size = min(self.size + 1, self.max_num_paths)
+        self.total_size += 1
+
+        if self.monitor is not None:
+            self.monitor.record("head", self.head)
+            self.monitor.record("size", self.size)
+            self.monitor.record("total_size", self.total_size)
 
     def sample_paths(
             self,

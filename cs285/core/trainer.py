@@ -99,9 +99,9 @@ class Trainer(object):
             for _i in range(self.num_trains_per_epoch if
                             self.num_trains_per_epoch > 0 else explore_steps):
                 self.algorithm.fit(self.buffer)
+                self.monitor.increment()
 
             # finally record how fast a round was completed for logging purposes
             if self.monitor is not None:
                 self.monitor.record(
-                    "epochs_per_second",
-                    epoch / (time.time() - self.start_time))
+                    "epochs_per_second", epoch / (time.time() - self.start_time))

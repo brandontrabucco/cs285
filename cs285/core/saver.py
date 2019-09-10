@@ -37,6 +37,7 @@ class Saver(object):
 
                 # convert replay buffer into a pickle able form
                 replay_buffer = dict(
+                    total_size=self.replay_buffer.total_size,
                     size=self.replay_buffer.size,
                     head=self.replay_buffer.head,
                     tail=self.replay_buffer.tail,
@@ -65,6 +66,7 @@ class Saver(object):
                     replay_buffer = pkl.load(f)
 
                     # assign the state of the loaded replay buffer to the current replay buffer
+                    self.replay_buffer.total_size = replay_buffer["total_size"]
                     self.replay_buffer.size = replay_buffer["size"]
                     self.replay_buffer.head = replay_buffer["head"]
                     self.replay_buffer.tail = replay_buffer["tail"]
