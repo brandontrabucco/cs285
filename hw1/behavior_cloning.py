@@ -2,7 +2,6 @@
 
 
 from cs285.core.monitor import Monitor
-from cs285.core.envs.pointmass_env import PointmassEnv
 from cs285.core.envs.normalized_env import NormalizedEnv
 from cs285.distributions.gaussian import Gaussian
 from cs285.networks import dense
@@ -11,6 +10,7 @@ from cs285.core.data.replay_buffer import ReplayBuffer
 from cs285.core.saver import Saver
 from cs285.algorithms.step.behavior_cloning import BehaviorCloning
 from cs285.core.trainer import Trainer
+from gym.envs.mujoco.half_cheetah import HalfCheetahEnv
 import tensorflow as tf
 
 
@@ -19,7 +19,7 @@ if __name__ == "__main__":
     for gpu in tf.config.experimental.list_physical_devices('GPU'):
         tf.config.experimental.set_memory_growth(gpu, True)
 
-    logging_dir = "./behavior_cloning"
+    logging_dir = "./behavior_cloning/half_cheetah"
     observation_key = "observation"
 
     monitor = Monitor(logging_dir)
@@ -28,7 +28,7 @@ if __name__ == "__main__":
         return x[observation_key]
 
     def make_env():
-        return NormalizedEnv(PointmassEnv)
+        return NormalizedEnv(HalfCheetahEnv)
 
     env = make_env()
     observation_dim = env.observation_space.spaces[observation_key].low.size
@@ -63,7 +63,10 @@ if __name__ == "__main__":
         policy=policy,
         replay_buffer=replay_buffer)
 
-    algorithm = BehaviorCloning(policy)
+    algorithm = BehaviorCloning(
+        policy,
+        batch_size=32,
+        monitor=monitor)
 
     trainer = Trainer(
         sampler,
@@ -71,9 +74,9 @@ if __name__ == "__main__":
         algorithm,
         num_epochs=1000,
         num_episodes_per_epoch=0,
-        num_trains_per_epoch=1000,
+        num_trains_per_epoch=100,
         num_episodes_before_train=0,
-        num_epochs_per_eval=10,
+        num_epochs_per_eval=1,
         num_episodes_per_eval=10,
         saver=saver,
         monitor=monitor)
