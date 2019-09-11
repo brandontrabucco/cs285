@@ -8,7 +8,7 @@ from cs285.networks import dense
 from cs285.core.data.parallel_sampler import ParallelSampler
 from cs285.core.data.replay_buffer import ReplayBuffer
 from cs285.core.saver import Saver
-from cs285.algorithms.imitation.behavior_cloning import BehaviorCloning
+from cs285.algorithms.imitate.behavior_cloning import BehaviorCloning
 from cs285.core.trainer import Trainer
 from cs285.relabelers.dagger_relabeler import DaggerRelabeler
 from gym.envs.mujoco.half_cheetah import HalfCheetahEnv
