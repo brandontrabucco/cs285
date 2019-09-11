@@ -27,7 +27,7 @@ class DaggerRelabeler(Relabeler):
             rewards
     ):
         # compute the expert actions across the episode
-        expert_actions = self.expert_policy.expected_value(
+        expert_actions, log_pi = self.expert_policy.expected_value(
             tf.stack([self.expert_selector(x)
                       for x in observations], axis=0))
 

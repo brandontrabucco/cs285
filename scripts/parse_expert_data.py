@@ -42,7 +42,8 @@ if __name__ == "__main__":
         observations=dict(observation=np.zeros([max_num_paths, max_path_length, *observation.shape])),
         actions=np.zeros([max_num_paths, max_path_length, *action.shape]),
         rewards=np.zeros([max_num_paths, max_path_length]),
-        total_size=actual_num_paths,
+        total_steps=sum([y["action"].shape[0] for y in x]),
+        total_paths=actual_num_paths,
         size=actual_num_paths,
         head=actual_num_paths,
         tail=np.zeros([max_num_paths]))
