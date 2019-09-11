@@ -70,7 +70,7 @@ if __name__ == "__main__":
         observation_high = np.array(args.observation_high)
 
     # define the input shape
-    obs_bo = tf.keras.layers.Input(shape=norm_mean.shape)
+    obs_bo = tf.keras.layers.Input(shape=norm_mean.shape[-1])
 
     # de normalize the observations entering the network
     current_bo = tf.keras.layers.Lambda(

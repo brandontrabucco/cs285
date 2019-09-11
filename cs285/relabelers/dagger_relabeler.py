@@ -27,13 +27,9 @@ class DaggerRelabeler(Relabeler):
             rewards
     ):
         # compute the expert actions across the episode
-        actions = tf.stack(actions, axis=0)
-        expert_actions = self.expert_policy(
-            tf.stack([self.expert_selector(x) for x in observations], axis=0))
-
-        # determine which of the samples collected to relabel
-        actions = tf.unstack(tf.where(
-            self.relabel_mask(actions), expert_actions, actions), axis=0)
+        expert_actions = self.expert_policy.expected_value(
+            tf.stack([self.expert_selector(x)
+                      for x in observations], axis=0))
 
         # then return the samples in an original format to enter the buffer
-        return observations, actions, rewards
+        return observations, tf.unstack(expert_actions, axis=0), rewards

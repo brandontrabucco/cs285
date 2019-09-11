@@ -1,19 +1,14 @@
 """Author: Brandon Trabucco, Copyright 2019, MIT License"""
 
 
-import tensorflow as tf
-
-
 class Relabeler(object):
 
     def __init__(
             self,
-            replay_buffer,
-            relabel_probability=1.0
+            replay_buffer
     ):
         # relabel samples with some probability
         self.replay_buffer = replay_buffer
-        self.relabel_probability = relabel_probability
 
     def __setattr__(
         self,
@@ -91,21 +86,3 @@ class Relabeler(object):
         # relabel steps as they exit the replay buffer
         return self.relabel_sample_steps(
             *self.replay_buffer.sample_steps(batch_size))
-
-    def relabel_mask(
-            self,
-            data
-    ):
-        # generate a bernoulli mask that determines whether an element is relabeled
-        relabel_condition = tf.math.less_equal(
-            tf.random.uniform(
-                tf.shape(data)[:2],
-                maxval=1.0,
-                dtype=tf.float32), self.relabel_probability)
-
-        # expand to the same shape as the data
-        while len(relabel_condition.shape) < len(data.shape):
-            relabel_condition = tf.expand_dims(relabel_condition, -1)
-
-        # broadcast to data shape
-        return tf.broadcast_to(relabel_condition, tf.shape(data))
