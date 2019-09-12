@@ -1,7 +1,7 @@
 """Author: Brandon Trabucco, Copyright 2019, MIT License"""
 
 
-from cs285.core.data.sampler import Sampler
+from cs285.core.samplers.sampler import Sampler
 import numpy as np
 import threading
 
@@ -24,7 +24,7 @@ def collect_backend(
             render=inner_render,
             **inner_render_kwargs)
 
-        # push collected data into the main sampler thread
+        # push collected samplers into the main sampler thread
         inner_paths.extend(result_paths)
         inner_mean_returns.append(result_mean_return)
         inner_steps_collected.append(result_steps_collected)

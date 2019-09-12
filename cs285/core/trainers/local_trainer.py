@@ -1,10 +1,11 @@
 """Author: Brandon Trabucco, Copyright 2019, MIT License"""
 
 
+from cs285.core.trainers.trainer import Trainer
 import time
 
 
-class Trainer(object):
+class LocalTrainer(Trainer):
 
     def __init__(
         self,
@@ -20,13 +21,13 @@ class Trainer(object):
         saver=None,
         monitor=None
     ):
-        # samplers are for collecting data
+        # samplers are for collecting samplers
         self.sampler = sampler
 
-        # buffers are for storing data
+        # buffers are for storing samplers
         self.buffer = buffer
 
-        # algorithms are trained using the collected data
+        # algorithms are trained using the collected samplers
         self.algorithm = algorithm
 
         # specify how to train the policy

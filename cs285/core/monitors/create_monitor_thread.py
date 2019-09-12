@@ -2,9 +2,6 @@
 
 
 from tensorboard import program
-import os
-import queue
-import threading
 import tensorflow as tf
 import io
 import matplotlib.pyplot as plt
@@ -38,7 +35,7 @@ def plot_to_tensor(
     return tf.expand_dims(tf.image.decode_png(buffer.getvalue(), channels=4), 0)
 
 
-def create_and_listen(
+def create_monitor_thread(
     logging_dir,
     record_queue
 ):
@@ -56,10 +53,10 @@ def create_and_listen(
     except program.TensorBoardServerException:
         print("TensorBoard failed to launch")
 
-    # then loop forever and save data via the queue to tensor board
+    # then loop forever and save samplers via the queue to tensor board
     while True:
 
-        # pull the next data elements to log from the queue
+        # pull the next samplers elements to log from the queue
         if not record_queue.empty():
             step, key, value = record_queue.get()
             tf.summary.experimental.set_step(step)
@@ -91,59 +88,3 @@ def create_and_listen(
                 # otherwise, assume the tensor is still a scalar
                 else:
                     tf.summary.scalar(key, value)
-
-
-class Monitor(object):
-
-    def __init__(
-        self,
-        logging_dir
-    ):
-        # create a separate tensor board logging thread
-        self.logging_dir = logging_dir
-
-        # communicate with the thread via a queue
-        self.record_queue = queue.Queue()
-
-        # listen on the specified thread in a loop
-        self.thread = threading.Thread(
-            target=create_and_listen, args=(logging_dir, self.record_queue))
-        self.thread.start()
-        
-        # keep track of the current global step, and resume training if necessary
-        self.step_file = os.path.join(logging_dir, "step")
-        if tf.io.gfile.exists(self.step_file):
-            with tf.io.gfile.GFile(self.step_file, "r") as f:
-                self.step = int(f.read().strip())
-
-        # otherwise start from scratch
-        else:
-            self.step = 0
-        self.lock = threading.Lock()
-
-    def increment(
-        self
-    ):
-        # increment how many steps have been collected so far
-        self.lock.acquire()
-        self.step += 1
-        self.lock.release()
-
-    def save_step(
-        self
-    ):
-        # save the current step (like the tf global step) to a file
-        self.lock.acquire()
-        with tf.io.gfile.GFile(self.step_file, "w") as f:
-            f.write(str(self.step))
-        self.lock.release()
-
-    def record(
-        self,
-        key,
-        value,
-    ):
-        # record a tensor into the tensor board logging thread
-        self.lock.acquire()
-        self.record_queue.put((self.step, key, value))
-        self.lock.release()

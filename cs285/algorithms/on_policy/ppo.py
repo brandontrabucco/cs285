@@ -1,12 +1,12 @@
 """Author: Brandon Trabucco, Copyright 2019, MIT License"""
 
 
-from cs285.algorithms.path_algorithm import PathAlgorithm
+from cs285.algorithms.algorithm import Algorithm
 from cs285 import discounted_sum
 import tensorflow as tf
 
 
-class PPO(PathAlgorithm):
+class PPO(Algorithm):
 
     def __init__(
         self,
@@ -26,7 +26,7 @@ class PPO(PathAlgorithm):
         **kwargs,
     ):
         # train a policy using proximal policy optimization
-        PathAlgorithm.__init__(self, **kwargs)
+        Algorithm.__init__(self, **kwargs)
         self.policy = policy
         self.old_policy = old_policy
         self.vf = vf

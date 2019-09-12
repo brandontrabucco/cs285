@@ -50,13 +50,6 @@ class Algorithm(ABC):
     ):
         return NotImplemented
 
-    @abstractmethod
-    def sample_batch(
-            self,
-            buffer
-    ):
-        return NotImplemented
-
     def fit(
             self,
             buffer
@@ -71,4 +64,4 @@ class Algorithm(ABC):
             self.last_update_iteration = self.iteration
 
             # samples are pulled from the replay buffer on the fly
-            self.update_algorithm(*self.sample_batch(buffer))
+            self.update_algorithm(*buffer.sample(self.batch_size))

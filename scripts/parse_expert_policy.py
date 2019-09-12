@@ -48,7 +48,7 @@ if __name__ == "__main__":
     policy_type = [k for k in data.keys() if k != 'nonlin_type'][0]
     policy_params = data[policy_type]
 
-    # load the data normalizer for this policy
+    # load the samplers normalizer for this policy
     norm_mean = policy_params['obsnorm']['Standardizer']['mean_1_D']
     norm_mean_sq = policy_params['obsnorm']['Standardizer']['meansq_1_D']
     norm_std = np.sqrt(np.maximum(0, norm_mean_sq - np.square(norm_mean)))

@@ -1,11 +1,12 @@
 """Author: Brandon Trabucco, Copyright 2019, MIT License"""
 
 
+from cs285.core.savers.saver import Saver
 import tensorflow as tf
 import os
 
 
-class Saver(object):
+class LocalSaver(Saver):
 
     def __init__(
         self,

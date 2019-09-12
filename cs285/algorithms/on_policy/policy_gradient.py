@@ -1,12 +1,12 @@
 """Author: Brandon Trabucco, Copyright 2019, MIT License"""
 
 
-from cs285.algorithms.path_algorithm import PathAlgorithm
+from cs285.algorithms.algorithm import Algorithm
 from cs285 import discounted_sum
 import tensorflow as tf
 
 
-class PolicyGradient(PathAlgorithm):
+class PolicyGradient(Algorithm):
 
     def __init__(
         self,
@@ -18,7 +18,7 @@ class PolicyGradient(PathAlgorithm):
         **kwargs,
     ):
         # train a policy using the vanilla policy gradient
-        PathAlgorithm.__init__(self, **kwargs)
+        Algorithm.__init__(self, **kwargs)
         self.policy = policy
 
         # control the scale and decay of the reward

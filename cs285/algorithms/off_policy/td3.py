@@ -1,11 +1,11 @@
 """Author: Brandon Trabucco, Copyright 2019, MIT License"""
 
 
-from cs285.algorithms.step_algorithm import StepAlgorithm
+from cs285.algorithms.algorithm import Algorithm
 import tensorflow as tf
 
 
-class TD3(StepAlgorithm):
+class TD3(Algorithm):
 
     def __init__(
         self,
@@ -28,7 +28,7 @@ class TD3(StepAlgorithm):
         **kwargs,
     ):
         # train a policy using twin delayed deep deterministic policy gradient
-        StepAlgorithm.__init__(self, **kwargs)
+        Algorithm.__init__(self, **kwargs)
         self.policy = policy
         self.target_policy = target_policy
         self.qf1 = qf1

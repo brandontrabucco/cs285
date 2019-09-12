@@ -1,11 +1,11 @@
 """Author: Brandon Trabucco, Copyright 2019, MIT License"""
 
 
-from cs285.algorithms.step_algorithm import StepAlgorithm
+from cs285.algorithms.algorithm import Algorithm
 import tensorflow as tf
 
 
-class BehaviorCloning(StepAlgorithm):
+class BehaviorCloning(Algorithm):
 
     def __init__(
         self,
@@ -14,8 +14,8 @@ class BehaviorCloning(StepAlgorithm):
         policy_optimizer_kwargs=None,
         **kwargs,
     ):
-        # train a policy using behavior cloning on expert data
-        StepAlgorithm.__init__(self, **kwargs)
+        # train a policy using behavior cloning on expert samplers
+        Algorithm.__init__(self, **kwargs)
         self.policy = policy
 
         # build an optimizer for the policy
