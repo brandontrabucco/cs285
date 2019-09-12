@@ -1,7 +1,7 @@
 """Author: Brandon Trabucco, Copyright 2019, MIT License"""
 
 
-from cs285.core.envs.normalized_env import NormalizedEnv
+from cs285.data.envs import NormalizedEnv
 from cs285.distributions.gaussian import Gaussian
 from cs285.core.data.parallel_sampler import ParallelSampler
 from gym.envs.mujoco.half_cheetah import HalfCheetahEnv

@@ -1,7 +1,7 @@
 """Author: Brandon Trabucco, Copyright 2019, MIT License"""
 
 
-from cs285.core.envs.normalized_env import NormalizedEnv
+from cs285.data.envs import NormalizedEnv
 from cs285.distributions.gaussian import Gaussian
 from cs285.data.samplers.parallel_sampler import ParallelSampler
 from cs285.data.replay_buffers.step_replay_buffer import StepReplayBuffer
