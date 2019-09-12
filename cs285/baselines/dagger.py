@@ -10,7 +10,7 @@ from cs285.data.replay_buffers.step_replay_buffer import StepReplayBuffer
 from cs285.core.savers.local_saver import LocalSaver
 from cs285.algorithms.imitate.behavior_cloning import BehaviorCloning
 from cs285.core.trainers.local_trainer import LocalTrainer
-from cs285.relabelers.dagger_relabeler import DaggerRelabeler
+from cs285.data.relabelers.dagger_relabeler import DaggerRelabeler
 import tensorflow as tf
 
 
