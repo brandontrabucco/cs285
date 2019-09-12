@@ -3,8 +3,8 @@
 
 from cs285.core.envs.normalized_env import NormalizedEnv
 from cs285.distributions.gaussian import Gaussian
-from cs285.core.samplers.parallel_sampler import ParallelSampler
-from cs285.core.replay_buffers.step_replay_buffer import StepReplayBuffer
+from cs285.data.samplers.parallel_sampler import ParallelSampler
+from cs285.data.replay_buffers.step_replay_buffer import StepReplayBuffer
 from gym.envs.mujoco.half_cheetah import HalfCheetahEnv
 import tensorflow as tf
 import time

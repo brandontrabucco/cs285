@@ -50,39 +50,17 @@ class Relabeler(object):
         return self.replay_buffer.insert_path(
             *self.relabel_insert_path(observations, actions, rewards))
 
-    def relabel_sample_paths(
+    def relabel_sample(
             self,
-            observations,
-            actions,
-            rewards,
-            terminals
+            *args
     ):
         # relabel paths as they exit the replay buffer
-        return observations, actions, rewards, terminals
+        return args
 
-    def sample_paths(
+    def sample(
             self,
             batch_size
     ):
         # relabel paths as they exit the replay buffer
-        return self.relabel_sample_paths(
-            *self.replay_buffer.sample_paths(batch_size))
-
-    def relabel_sample_steps(
-            self,
-            observations,
-            actions,
-            rewards,
-            next_observations,
-            terminals
-    ):
-        # relabel steps as they exit the replay buffer
-        return observations, actions, rewards, next_observations, terminals
-
-    def sample_steps(
-            self,
-            batch_size
-    ):
-        # relabel steps as they exit the replay buffer
-        return self.relabel_sample_steps(
-            *self.replay_buffer.sample_steps(batch_size))
+        return self.relabel_sample(
+            *self.replay_buffer.sample(batch_size))

@@ -1,7 +1,8 @@
 """Author: Brandon Trabucco, Copyright 2019, MIT License"""
 
 
-from cs285.core.samplers.sampler import Sampler
+from cs285.data.samplers.simple_sampler import SimpleSampler
+from cs285.data.samplers.sampler import Sampler
 import numpy as np
 import threading
 
@@ -30,7 +31,7 @@ def collect_backend(
         inner_steps_collected.append(result_steps_collected)
 
 
-class ParallelSampler(object):
+class ParallelSampler(Sampler):
 
     def __init__(
             self,
@@ -38,7 +39,7 @@ class ParallelSampler(object):
             num_threads=1,
             **kwargs
     ):
-        self.samplers = [Sampler(*args, **kwargs) for i in range(num_threads)]
+        self.samplers = [SimpleSampler(*args, **kwargs) for i in range(num_threads)]
         self.num_threads = num_threads
 
     def collect(
