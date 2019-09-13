@@ -6,7 +6,7 @@ import numpy as np
 import argparse
 import pickle as pkl
 import os
-from cs285.core.replay_buffers.step_replay_buffer import StepReplayBuffer
+from cs285.data.replay_buffers.step_replay_buffer import StepReplayBuffer
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 """Author: Brandon Trabucco, Copyright 2019, MIT License"""
 
 
-from cs285.relabelers.relabeler import Relabeler
+from cs285.data.relabelers import Relabeler
 import tensorflow as tf
 
 

@@ -1,11 +1,11 @@
 """Author: Brandon Trabucco, Copyright 2019, MIT License"""
 
 
-from cs285.core.samplers.sampler import Sampler
+from cs285.data.samplers.sampler import Sampler
 import numpy as np
 
 
-class LocalSampler(Sampler):
+class SimpleSampler(Sampler):
 
     def __init__(
             self,

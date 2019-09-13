@@ -2,15 +2,15 @@
 
 
 from cs285.core.monitors.local_monitor import LocalMonitor
-from cs285.core.envs.normalized_env import NormalizedEnv
+from cs285.data.envs import NormalizedEnv
 from cs285.distributions.gaussian import Gaussian
 from cs285.networks import dense
-from cs285.core.samplers.parallel_sampler import ParallelSampler
-from cs285.core.replay_buffers.step_replay_buffer import StepReplayBuffer
+from cs285.data.samplers.parallel_sampler import ParallelSampler
+from cs285.data.replay_buffers.step_replay_buffer import StepReplayBuffer
 from cs285.core.savers.local_saver import LocalSaver
 from cs285.algorithms.imitate.behavior_cloning import BehaviorCloning
 from cs285.core.trainers.local_trainer import LocalTrainer
-from cs285.relabelers.dagger_relabeler import DaggerRelabeler
+from cs285.data.relabelers.dagger_relabeler import DaggerRelabeler
 import tensorflow as tf
 
 
