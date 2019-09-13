@@ -2,7 +2,7 @@
 
 
 from cs285 import nested_apply
-from cs285.data.envs import ProxyEnv
+from cs285.data.envs.proxy_env import ProxyEnv
 from gym.spaces import Box, Dict
 import numpy as np
 
