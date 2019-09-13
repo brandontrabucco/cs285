@@ -84,15 +84,6 @@ def dagger(
         selector=selector,
         monitor=monitor)
 
-    eval_sampler = ParallelSampler(
-        make_env,
-        make_policy,
-        policy,
-        num_threads=variant["num_threads"],
-        max_path_length=variant["max_path_length"],
-        selector=selector,
-        monitor=monitor)
-
     replay_buffer = DaggerRelabeler(
         expert_policy,
         StepReplayBuffer(
@@ -113,7 +104,7 @@ def dagger(
 
     trainer = LocalTrainer(
         explore_sampler,
-        eval_sampler,
+        explore_sampler,
         replay_buffer,
         algorithm,
         num_epochs=variant["num_epochs"],
