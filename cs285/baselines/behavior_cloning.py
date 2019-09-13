@@ -2,7 +2,7 @@
 
 
 from cs285.core.monitors.local_monitor import LocalMonitor
-from cs285.data.envs import NormalizedEnv
+from cs285.data.envs.normalized_env import NormalizedEnv
 from cs285.distributions.gaussian import Gaussian
 from cs285.networks import dense
 from cs285.data.samplers.parallel_sampler import ParallelSampler
