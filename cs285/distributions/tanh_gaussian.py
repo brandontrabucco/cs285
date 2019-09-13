@@ -56,7 +56,7 @@ class TanhGaussian(Gaussian):
         log_probs = Gaussian.log_prob(self, gaussian_samples, *inputs)
 
         # compute the log probability density of the samples
-        return tanh_samples, log_probs - 2.0 * tf.reduce_sum(
+        return og_probs - 2.0 * tf.reduce_sum(
             math.log(2.0)
             - gaussian_samples
             - tf.math.softplus(-2.0 * gaussian_samples), axis=(-1))
