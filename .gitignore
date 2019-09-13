@@ -4,6 +4,7 @@ events.out.tfevents.**
 *.egg-info/
 *.ckpt*
 *.buffer*
+*.pkl
 checkpoint
 *.out
 step
