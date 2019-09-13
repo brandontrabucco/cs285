@@ -2,7 +2,7 @@
 
 
 from cs285 import nested_apply
-from cs285.data.replay_buffers import ReplayBuffer
+from cs285.data.replay_buffers.replay_buffer import ReplayBuffer
 import numpy as np
 
 
