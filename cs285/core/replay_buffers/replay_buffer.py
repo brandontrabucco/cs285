@@ -46,7 +46,8 @@ class ReplayBuffer(ABC):
     ):
         # save the replay buffer to disk
         replay_path = os.path.join(logging_dir, self.logging_prefix + "replay.buffer")
-        os.makedirs(os.path.dirname(replay_path))
+        if not os.path.exists(os.path.dirname(replay_path)):
+            os.makedirs(os.path.dirname(replay_path))
         with open(replay_path, "wb") as f:
             state = dict(
                 observations=self.observations,

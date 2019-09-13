@@ -9,7 +9,8 @@ class LocalTrainer(Trainer):
 
     def __init__(
         self,
-        sampler,
+        explore_sampler,
+        eval_sampler,
         buffer,
         algorithm,
         num_epochs=1000,
@@ -21,8 +22,9 @@ class LocalTrainer(Trainer):
         saver=None,
         monitor=None
     ):
-        # samplers are for collecting samplers
-        self.sampler = sampler
+        # samplers are for collecting data
+        self.explore_sampler = explore_sampler
+        self.eval_sampler = eval_sampler
 
         # buffers are for storing samplers
         self.buffer = buffer
@@ -53,7 +55,7 @@ class LocalTrainer(Trainer):
             self.saver.load()
 
         # warm up the buffer by collecting initial samples
-        warm_up_paths, warm_up_return, warm_up_steps = self.sampler.collect(
+        warm_up_paths, warm_up_return, warm_up_steps = self.explore_sampler.collect(
             self.num_episodes_before_train, evaluate=False)
 
         # insert these samples into the buffer
@@ -65,7 +67,7 @@ class LocalTrainer(Trainer):
         for epoch in range(self.num_epochs):
             # collect paths every round for exploration
             start_collect_time = time.time()
-            explore_paths, explore_return, explore_steps = self.sampler.collect(
+            explore_paths, explore_return, explore_steps = self.explore_sampler.collect(
                 self.num_episodes_per_epoch, evaluate=False)
 
             # insert the exploration paths into the buffer
@@ -81,7 +83,7 @@ class LocalTrainer(Trainer):
 
             # evaluate the policy sometimes
             if epoch % self.num_epochs_per_eval == 0:
-                eval_paths, eval_return, eval_steps = self.sampler.collect(
+                eval_paths, eval_return, eval_steps = self.eval_sampler.collect(
                     self.num_episodes_per_eval, evaluate=True)
 
                 # record the mean return of the policy

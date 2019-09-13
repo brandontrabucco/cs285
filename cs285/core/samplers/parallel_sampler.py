@@ -2,6 +2,7 @@
 
 
 from cs285.core.samplers.sampler import Sampler
+from cs285.core.samplers.local_sampler import LocalSampler
 import numpy as np
 import threading
 
@@ -30,7 +31,7 @@ def collect_backend(
         inner_steps_collected.append(result_steps_collected)
 
 
-class ParallelSampler(object):
+class ParallelSampler(Sampler):
 
     def __init__(
             self,
@@ -38,7 +39,7 @@ class ParallelSampler(object):
             num_threads=1,
             **kwargs
     ):
-        self.samplers = [Sampler(*args, **kwargs) for i in range(num_threads)]
+        self.samplers = [LocalSampler(*args, **kwargs) for i in range(num_threads)]
         self.num_threads = num_threads
 
     def collect(
