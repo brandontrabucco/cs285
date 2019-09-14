@@ -74,6 +74,15 @@ def behavior_cloning(
     def selector(x):
         return x[observation_key]
 
+    warm_up_sampler = ParallelSampler(
+        make_env,
+        make_expert_policy,
+        expert_policy,
+        num_threads=variant["num_threads"],
+        max_path_length=variant["max_path_length"],
+        selector=selector,
+        monitor=monitor)
+
     explore_sampler = ParallelSampler(
         make_env,
         make_expert_policy,
@@ -108,6 +117,7 @@ def behavior_cloning(
         monitor=monitor)
 
     trainer = LocalTrainer(
+        warm_up_sampler,
         explore_sampler,
         eval_sampler,
         replay_buffer,

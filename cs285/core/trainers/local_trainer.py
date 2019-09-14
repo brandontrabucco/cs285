@@ -9,6 +9,7 @@ class LocalTrainer(Trainer):
 
     def __init__(
         self,
+        warm_up_sampler,
         explore_sampler,
         eval_sampler,
         buffer,
@@ -23,6 +24,7 @@ class LocalTrainer(Trainer):
         monitor=None
     ):
         # samplers are for collecting data
+        self.warm_up_sampler = warm_up_sampler
         self.explore_sampler = explore_sampler
         self.eval_sampler = eval_sampler
 
@@ -55,7 +57,7 @@ class LocalTrainer(Trainer):
             self.saver.load()
 
         # warm up the buffer by collecting initial samples
-        warm_up_paths, warm_up_return, warm_up_steps = self.explore_sampler.collect(
+        warm_up_paths, warm_up_return, warm_up_steps = self.warm_up_sampler.collect(
             self.num_episodes_before_train, evaluate=False)
 
         # insert these samples into the buffer

@@ -75,7 +75,25 @@ def dagger(
     def selector(x):
         return x[observation_key]
 
+    warm_up_sampler = ParallelSampler(
+        make_env,
+        make_expert_policy,
+        expert_policy,
+        num_threads=variant["num_threads"],
+        max_path_length=variant["max_path_length"],
+        selector=selector,
+        monitor=monitor)
+
     explore_sampler = ParallelSampler(
+        make_env,
+        make_policy,
+        policy,
+        num_threads=variant["num_threads"],
+        max_path_length=variant["max_path_length"],
+        selector=selector,
+        monitor=monitor)
+
+    eval_sampler = ParallelSampler(
         make_env,
         make_policy,
         policy,
@@ -103,8 +121,9 @@ def dagger(
         monitor=monitor)
 
     trainer = LocalTrainer(
+        warm_up_sampler,
         explore_sampler,
-        explore_sampler,
+        eval_sampler,
         replay_buffer,
         algorithm,
         num_epochs=variant["num_epochs"],
