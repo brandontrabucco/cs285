@@ -28,6 +28,6 @@ def run_experiment(policy_ckpts):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--policy_ckpt", type=str, nargs="+")
+    parser.add_argument("--policy_ckpts", type=str, nargs="+")
     args = parser.parse_args()
     run_experiment(args.policy_ckpt)
