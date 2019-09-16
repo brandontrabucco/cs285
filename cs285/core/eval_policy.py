@@ -76,12 +76,9 @@ def eval_policy(
         threads.append(
             threading.Thread(
                 target=inner_eval_policy,
-                args=(
-                    results,
-                    variant,
-                    env_class),
+                args=(results, variant, env_class),
                 kwargs=dict(
-                    observation_key=observation_key,
+                    inner_observation_key=observation_key,
                     **env_kwargs)))
 
     for t in threads:
