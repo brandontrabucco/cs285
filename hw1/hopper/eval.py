@@ -23,4 +23,4 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--policy_ckpt", type=str)
     args = parser.parse_args()
-    run_experiment(args.policy_ckpts)
+    run_experiment(args.policy_ckpt)
