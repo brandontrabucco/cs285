@@ -15,7 +15,7 @@ def run_experiment(policy_ckpt):
     eval_policy_variant["num_episodes"] = 10
 
     mean, std = eval_policy(eval_policy_variant, AntEnv)
-    print("mean: {}    std: {}".format(mean, std))
+    print("mean: {} std: {}".format(mean, std))
 
 
 if __name__ == "__main__":
