@@ -22,9 +22,9 @@ bash cs285/cs285/scripts/download_experts.sh cs285
 Evaluate the expert policies after downloading finishes.
 
 ```
-bash cs285/cs285/hw1/ant/eval.py --policy_ckpt cs285/ant/expert_policy.ckpt
-bash cs285/cs285/hw1/humanoid/eval.py --policy_ckpt cs285/humanoid/expert_policy.ckpt
-bash cs285/cs285/hw1/hopper/eval.py --policy_ckpt cs285/hopper/expert_policy.ckpt
+python cs285/cs285/hw1/ant/eval.py --policy_ckpt cs285/ant/expert_policy.ckpt
+python cs285/cs285/hw1/humanoid/eval.py --policy_ckpt cs285/humanoid/expert_policy.ckpt
+python cs285/cs285/hw1/hopper/eval.py --policy_ckpt cs285/hopper/expert_policy.ckpt
 ```
 
 Launch training sessions for behavior cloning and dagger.
@@ -38,9 +38,9 @@ bash cs285/cs285/hw1/hopper/launch.sh cs285
 Evaluate the policies after training finishes.
 
 ```
-bash cs285/cs285/hw1/ant/eval.py --policy_ckpt cs285/ant/behavior_cloning/?/policy.ckpt
-bash cs285/cs285/hw1/humanoid/eval.py --policy_ckpt cs285/humanoid/behavior_cloning/?/policy.ckpt
-bash cs285/cs285/hw1/hopper/eval.py --policy_ckpt cs285/hopper/behavior_cloning/?/policy.ckpt
+python cs285/cs285/hw1/ant/eval.py --policy_ckpt cs285/ant/behavior_cloning/?/policy.ckpt
+python cs285/cs285/hw1/humanoid/eval.py --policy_ckpt cs285/humanoid/behavior_cloning/?/policy.ckpt
+python cs285/cs285/hw1/hopper/eval.py --policy_ckpt cs285/hopper/behavior_cloning/?/policy.ckpt
 ```
 
 Perform a small hyperparameter sweep on the number of demonstrations.
