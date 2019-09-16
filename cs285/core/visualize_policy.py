@@ -7,14 +7,14 @@ from cs285.data.samplers.simple_sampler import SimpleSampler
 import tensorflow as tf
 
 
-sim_policy_variant = dict(
+visualize_policy_variant = dict(
     policy_ckpt="./expert_policy.ckpt",
     exploration_noise_std=0.1,
     max_path_length=1000,
     num_episodes=10)
 
 
-def sim_policy(
+def visualize_policy_policy(
     variant,
     env_class,
     observation_key="observation",
@@ -27,7 +27,7 @@ def sim_policy(
     def make_env():
         return NormalizedEnv(env_class, **env_kwargs)
 
-    policy_ckpt = variant["expert_policy_ckpt"]
+    policy_ckpt = variant["policy_ckpt"]
 
     def make_policy():
         return Gaussian(
@@ -48,7 +48,7 @@ def sim_policy(
         max_path_length=variant["max_path_length"],
         selector=selector)
 
-    return sampler.collect(
+    sampler.collect(
         variant["num_episodes"],
         evaluate=True,
         render=True)
