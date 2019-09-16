@@ -49,10 +49,10 @@ Perform a small hyperparameter sweep on the number of demonstrations.
 bash cs285/cs285/hw1/sweep/hopper/launch.sh cs285
 ```
 
-Evaluate the policies after training finishes.
+Evaluate the swept policies after training finishes.
 
 ```
-bash cs285/cs285/hw1/sweep/hopper/eval.py --policy_ckpt cs285/sweep/hopper/behavior_cloning/?/policy.ckpt
+python cs285/cs285/hw1/sweep/hopper/eval.py --policy_ckpt cs285/sweep/hopper/behavior_cloning/?/policy.ckpt
 ```
 
 Generate plots of learning curves for behavior cloning and dagger.
