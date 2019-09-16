@@ -41,11 +41,11 @@ bash cs285/cs285/hw1/hopper/launch.sh cs285
 Evaluate the policies after training finishes.
 
 ```
-python cs285/cs285/hw1/ant/eval.py  \
+python cs285/cs285/hw1/ant/eval.py \
     --policy_ckpt cs285/ant/behavior_cloning/*/policy.ckpt
-python cs285/cs285/hw1/humanoid/eval.py  \
+python cs285/cs285/hw1/humanoid/eval.py \
     --policy_ckpt cs285/humanoid/behavior_cloning/*/policy.ckpt
-python cs285/cs285/hw1/hopper/eval.py  \
+python cs285/cs285/hw1/hopper/eval.py \
     --policy_ckpt cs285/hopper/behavior_cloning/*/policy.ckpt
 ```
 
@@ -58,7 +58,7 @@ bash cs285/cs285/hw1/sweep/hopper/launch.sh cs285
 Evaluate the swept policies after training finishes.
 
 ```
-python cs285/cs285/hw1/sweep/hopper/eval.py  \
+python cs285/cs285/hw1/sweep/hopper/eval.py \
     --policy_ckpt cs285/sweep/hopper/behavior_cloning/*/policy.ckpt
 ```
 
