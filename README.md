@@ -13,10 +13,18 @@ pip install -e cs285
 
 ## Assignment 1
 
-To launch the first assignment, first doanload the expert policies.
+To launch the first assignment, first download the expert policies.
 
 ```
 bash cs285/cs285/scripts/download_experts.sh cs285
+```
+
+Evaluate the expert policies after downloading finishes.
+
+```
+bash cs285/cs285/hw1/ant/eval.py --policy_ckpt cs285/ant/expert_policy.ckpt
+bash cs285/cs285/hw1/humanoid/eval.py --policy_ckpt cs285/humanoid/expert_policy.ckpt
+bash cs285/cs285/hw1/hopper/eval.py --policy_ckpt cs285/hopper/expert_policy.ckpt
 ```
 
 Launch training sessions for behavior cloning and dagger.
@@ -47,7 +55,7 @@ Evaluate the policies after training finishes.
 bash cs285/cs285/hw1/sweep/hopper/eval.py --policy_ckpt cs285/sweep/hopper/behavior_cloning/?/policy.ckpt
 ```
 
-Generate plots of learning curves for dagger.
+Generate plots of learning curves for behavior cloning and dagger.
 
 ```
 tensorboard --logdir cs285 --port 9999
