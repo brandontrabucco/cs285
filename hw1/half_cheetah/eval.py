@@ -14,7 +14,8 @@ def run_experiment(policy_ckpt):
     eval_policy_variant["max_path_length"] = 1000
     eval_policy_variant["num_episodes"] = 10
 
-    eval_policy(eval_policy_variant, HalfCheetahEnv)
+    paths, mean_return, steps = eval_policy(eval_policy_variant, HalfCheetahEnv)
+    print("Mean Returns for HalfCheetahEnv was {}".format(mean_return))
 
 
 if __name__ == "__main__":

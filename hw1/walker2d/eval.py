@@ -14,7 +14,8 @@ def run_experiment(policy_ckpt):
     eval_policy_variant["max_path_length"] = 1000
     eval_policy_variant["num_episodes"] = 10
 
-    eval_policy(eval_policy_variant, Walker2dEnv)
+    paths, mean_return, steps = eval_policy(eval_policy_variant, Walker2dEnv)
+    print("Mean Returns for Walker2dEnv was {}".format(mean_return))
 
 
 if __name__ == "__main__":
