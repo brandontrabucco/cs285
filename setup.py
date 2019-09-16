@@ -10,7 +10,8 @@ REQUIRED_PACKAGES = [
     'numpy',
     'mujoco-py',
     'gym[all]',
-    'matplotlib']
+    'matplotlib',
+    'pydot']
 
 
 setup(
