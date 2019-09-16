@@ -1,4 +1,4 @@
-# CS 285: Deep Reinforcement Learning
+# CS 285: Deep RL
 
 A minimalist reinforcement learning package for TensorFlow 2.0. Have fun! -Brandon
 
