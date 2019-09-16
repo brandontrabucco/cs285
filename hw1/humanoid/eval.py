@@ -15,7 +15,7 @@ def run_experiment(policy_ckpt):
     eval_policy_variant["num_episodes"] = 10
 
     paths, mean_return, steps = eval_policy(eval_policy_variant, HumanoidEnv)
-    print("Mean Returns for HumanoidEnv was {}".format(mean_return))
+    print("{}".format(mean_return))
 
 
 if __name__ == "__main__":
