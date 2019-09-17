@@ -18,4 +18,4 @@ setup(
     install_requires=REQUIRED_PACKAGES,
     include_package_data=True,
     packages=[p for p in find_packages() if p.startswith('cs285')],
-    description='Deep RL Framework by Brandon Trabucco.')
+    description='A minimalist reinforcement learning package for TensorFlow 2.0.')
