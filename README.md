@@ -66,7 +66,7 @@ python cs285/scripts/plot.py \
     --title "Learning Curve For DAgger" \
     --xlabel "Gradient Descent Iterations" \
     --ylabel "Return Mean" \
-    --input_patterns ${FILE_PATTERN_TO_JSON_FILES} \
+    --input_patterns "${FILE_PATTERN_TO_JSON_FILES}" \
     --input_names dagger \
     --bars ${EXPERT_RETURN_MEAN} ${BEHAVIOR_CLONING_RETURN_MEAN} \
     --bar_names expert behavior_cloning
