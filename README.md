@@ -58,7 +58,7 @@ Download json data of learning curves for dagger.
 tensorboard --logdir cs285 --port 9999
 ```
 
-Render plots using json from tensorboard.
+Render plots using json data for dagger policies from tensorboard.
 
 ```
 python cs285/scripts/plot.py \
