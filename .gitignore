@@ -7,6 +7,8 @@ events.out.tfevents.**
 *.out
 *.pkl
 *.txt
+*.json
+*.csv
 *.png
 *.buffer
 *.pyc

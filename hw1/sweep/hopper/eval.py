@@ -27,13 +27,22 @@ def run_experiment(data_dir):
         mean_returns.append(mean)
 
     plt.clf()
-    plt.plot(
+
+    ax = plt.subplot(111)
+    ax.plot(
         [2000, 4000, 6000, 8000, 10000],
         mean_returns)
 
-    plt.title("More Demonstrations Improves Performance")
-    plt.xlabel("Number Of Demonstrations")
-    plt.ylabel("Return Mean")
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+
+    ax.yaxis.set_ticks_position('left')
+    ax.xaxis.set_ticks_position('bottom')
+
+    ax.set_xlabel("Number Of Demonstrations")
+    ax.set_ylabel("Return Mean")
+
+    ax.set_title("More Demonstrations Improves Performance: Hopper-v2")
     plt.savefig(os.path.join(
         data_dir, "sweep_mean_return.png"))
 
