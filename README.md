@@ -63,7 +63,7 @@ Render plots using json from tensorboard.
 ```
 python cs285/scripts/plot.py \
     --output_file cs285/humanoid/dagger/dagger_learning_curve.png \
-    --title "Learning Curve For DAgger" \
+    --title "Learning Curve For DAgger: Humanoid-v2" \
     --xlabel "Gradient Descent Iterations" \
     --ylabel "Return Mean" \
     --input_patterns "${FILE_PATTERN_TO_JSON_FILES}" \
