@@ -45,7 +45,7 @@ python cs285/cs285/hw1/hopper/eval.py \
     --policy_ckpt cs285/hopper/behavior_cloning/*/policy.ckpt
     
 python cs285/cs285/hw1/sweep/hopper/eval.py \
-    --policy_ckpt cs285/sweep/hopper/behavior_cloning/*/policy.ckpt
+    --data_dir cs285/sweep/hopper/behavior_cloning
 ```
 
 Evaluate the expert policies after downloading finishes.
@@ -70,8 +70,8 @@ tensorboard --logdir cs285 --port 9999
 Render plots using json from tensorboard.
 
 ```
-python scripts/plot.py \
-    --output_file humanoid/dagger/dagger_learning_curve.png \
+python cs285/scripts/plot.py \
+    --output_file cs285/humanoid/dagger/dagger_learning_curve.png \
     --title "Learning Curve For DAgger" \
     --xlabel "Gradient Descent Iterations" \
     --ylabel "Return Mean" \
