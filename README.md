@@ -70,7 +70,7 @@ tensorboard --logdir cs285 --port 9999
 Render plots using json from tensorboard.
 
 ```
-python scripts/generate_plot.py \
+python scripts/plot.py \
     --output_file humanoid/dagger/dagger_learning_curve.png \
     --title "Learning Curve For DAgger" \
     --xlabel "Gradient Descent Iterations" \
