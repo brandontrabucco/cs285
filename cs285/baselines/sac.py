@@ -64,12 +64,12 @@ def sac(
     policy = make_policy()
 
     qf1 = dense(
-        observation_dim,
+        observation_dim + action_dim,
         1,
         hidden_size=variant["hidden_size"],
         num_hidden_layers=variant["num_hidden_layers"])
     qf2 = dense(
-        observation_dim,
+        observation_dim + action_dim,
         1,
         hidden_size=variant["hidden_size"],
         num_hidden_layers=variant["num_hidden_layers"])
