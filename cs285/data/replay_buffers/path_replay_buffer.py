@@ -26,7 +26,7 @@ class PathReplayBuffer(ReplayBuffer):
             x
     ):
         # create numpy arrays to store samples
-        return np.zeros([self.max_num_paths, self.max_path_length, *x.shape], dtype=np.float32)
+        return np.zeros([self.max_num_paths, self.max_path_length, *x.shape], dtype=x.dtype)
 
     def insert_backend(
             self,
@@ -34,7 +34,7 @@ class PathReplayBuffer(ReplayBuffer):
             data
     ):
         # insert samples into the numpy array
-        structure[self.head, int(self.terminals[self.head]), ...] = data
+        structure[self.head, int(self.terminals[self.head]) % self.max_path_length, ...] = data
 
     def insert_path(
             self,
@@ -60,7 +60,7 @@ class PathReplayBuffer(ReplayBuffer):
             nested_apply(self.insert_backend, self.observations, o)
             self.insert_backend(self.actions, a)
             self.insert_backend(self.rewards, r)
-            self.terminals[self.head] = i + 1
+            self.terminals[self.head] = i
             self.total_steps += 1
 
         # increment the head and size
@@ -81,7 +81,7 @@ class PathReplayBuffer(ReplayBuffer):
         observations = nested_apply(sample, self.selector(self.observations))
         actions = sample(self.actions)
         rewards = sample(self.rewards)
-        terminals = (np.arange(self.max_path_length) < sample(self.terminals)).astype(np.float32)
+        terminals = (np.arange(self.max_path_length)[None, :] <= sample(self.terminals)[:, None]).astype(np.float32)
 
         # return the samples in a batch
         return observations, actions, rewards, terminals

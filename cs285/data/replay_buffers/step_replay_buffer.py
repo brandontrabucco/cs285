@@ -25,7 +25,7 @@ class StepReplayBuffer(ReplayBuffer):
             x
     ):
         # create numpy arrays to store samples
-        return np.zeros([self.max_num_steps, *x.shape], dtype=np.float32)
+        return np.zeros([self.max_num_steps, *x.shape], dtype=x.dtype)
 
     def insert_backend(
             self,
