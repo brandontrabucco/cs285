@@ -53,14 +53,14 @@ class PathReplayBuffer(ReplayBuffer):
             self.observations = nested_apply(self.inflate_backend, observations[0])
             self.actions = self.inflate_backend(actions[0])
             self.rewards = self.inflate_backend(rewards[0])
-            self.terminals = self.inflate_backend(rewards[0])
+            self.terminals = np.zeros([self.max_num_paths], dtype=np.int32)
 
         # insert all samples into the buffer
-        for i, (o, a, r) in zip(observations, actions, rewards):
+        for i, (o, a, r) in enumerate(zip(observations, actions, rewards)):
             nested_apply(self.insert_backend, self.observations, o)
             self.insert_backend(self.actions, a)
             self.insert_backend(self.rewards, r)
-            self.insert_backend(self.terminals, i + 1)
+            self.terminals[self.head] = i + 1
             self.total_steps += 1
 
         # increment the head and size
