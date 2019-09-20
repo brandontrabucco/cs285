@@ -3,7 +3,7 @@
 
 from cs285 import nested_apply
 from cs285.data.envs.proxy_env import ProxyEnv
-from gym.spaces import Box, Dict
+from gym.spaces import Box, Dict, Discrete
 import numpy as np
 
 
@@ -45,7 +45,11 @@ class NormalizedEnv(ProxyEnv):
         self.observation_space = Dict(
             nested_apply(
                 create_space, self.original_observation_space))
-        self.action_space = create_space(self.original_action_space)
+
+        if not isinstance(self.original_action_space, Discrete):
+            self.action_space = create_space(self.original_action_space)
+        else:
+            self.action_space = self.original_action_space
 
     def reset(
         self,
@@ -62,10 +66,10 @@ class NormalizedEnv(ProxyEnv):
         self, 
         action
     ):
-        un_normalized_action = denormalize(
-            action, self.original_action_space)
-        observation, reward, done, info = ProxyEnv.step(
-            self, un_normalized_action)
+        if not isinstance(self.original_action_space, Discrete):
+            action = denormalize(
+                action, self.original_action_space)
+        observation, reward, done, info = ProxyEnv.step(self, action)
         observation = nested_apply(
             normalize, observation, self.original_observation_space)
         observation = nested_apply(
