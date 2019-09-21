@@ -30,11 +30,6 @@ class TD3(Baseline):
             batch_size=256,
             **kwargs
     ):
-        Baseline.__init__(
-            self,
-            *args,
-            **kwargs)
-
         self.hidden_size = hidden_size
         self.num_hidden_layers = num_hidden_layers
         self.exploration_noise_std = exploration_noise_std
@@ -48,6 +43,11 @@ class TD3(Baseline):
         self.qf_learning_rate = qf_learning_rate
         self.policy_learning_rate = policy_learning_rate
         self.batch_size = batch_size
+
+        Baseline.__init__(
+            self,
+            *args,
+            **kwargs)
 
     def build(
             self

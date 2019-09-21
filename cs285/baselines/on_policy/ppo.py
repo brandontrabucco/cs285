@@ -29,11 +29,6 @@ class PPO(Baseline):
             batch_size=256,
             **kwargs
     ):
-        Baseline.__init__(
-            self,
-            *args,
-            **kwargs)
-
         self.hidden_size = hidden_size
         self.num_hidden_layers = num_hidden_layers
         self.exploration_noise_std = exploration_noise_std
@@ -46,6 +41,11 @@ class PPO(Baseline):
         self.policy_learning_rate = policy_learning_rate
         self.vf_learning_rate = vf_learning_rate
         self.batch_size = batch_size
+
+        Baseline.__init__(
+            self,
+            *args,
+            **kwargs)
 
     def build(
             self

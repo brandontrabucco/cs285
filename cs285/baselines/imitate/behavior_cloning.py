@@ -23,17 +23,17 @@ class BehaviorCloning(Baseline):
             batch_size=256,
             **kwargs,
     ):
-        Baseline.__init__(
-            self,
-            *args,
-            **kwargs)
-
         self.hidden_size = hidden_size
         self.num_hidden_layers = num_hidden_layers
         self.exploration_noise_std = exploration_noise_std
         self.expert_policy_ckpt = expert_policy_ckpt
         self.max_num_steps = max_num_steps
         self.batch_size = batch_size
+
+        Baseline.__init__(
+            self,
+            *args,
+            **kwargs)
 
     def build(
             self

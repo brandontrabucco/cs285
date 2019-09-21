@@ -25,11 +25,6 @@ class PolicyGradient(Baseline):
             batch_size=256,
             **kwargs
     ):
-        Baseline.__init__(
-            self,
-            *args,
-            **kwargs)
-
         self.hidden_size = hidden_size
         self.num_hidden_layers = num_hidden_layers
         self.max_num_paths = max_num_paths
@@ -38,6 +33,11 @@ class PolicyGradient(Baseline):
         self.discount = discount
         self.policy_learning_rate = policy_learning_rate
         self.batch_size = batch_size
+
+        Baseline.__init__(
+            self,
+            *args,
+            **kwargs)
 
     def build(
             self
