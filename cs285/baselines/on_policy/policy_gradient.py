@@ -3,6 +3,7 @@
 
 from cs285.baselines.baseline import Baseline
 from cs285.distributions.continuous.gaussian import Gaussian
+from cs285.distributions.discrete.categorical import Categorical
 from cs285.networks import dense
 from cs285.data.replay_buffers.path_replay_buffer import PathReplayBuffer
 from cs285.core.savers.local_saver import LocalSaver
@@ -42,13 +43,16 @@ class PolicyGradient(Baseline):
     def build(
             self
     ):
-        policy = Gaussian(
-            dense(
-                self.observation_dim,
-                self.action_dim,
-                hidden_size=self.hidden_size,
-                num_hidden_layers=self.num_hidden_layers),
-            std=self.exploration_noise_std)
+        policy = dense(
+            self.observation_dim,
+            self.action_dim,
+            hidden_size=self.hidden_size,
+            num_hidden_layers=self.num_hidden_layers)
+
+        if self.is_discrete:
+            policy = Categorical(policy, temperature=self.exploration_noise_std)
+        else:
+            policy = Gaussian(policy, std=self.exploration_noise_std)
 
         replay_buffer = PathReplayBuffer(
             max_num_paths=self.max_num_paths,

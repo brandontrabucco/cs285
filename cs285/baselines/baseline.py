@@ -50,7 +50,8 @@ class Baseline(ABC):
         # check the dimensionality of the environment
         env = self.get_env()
         self.observation_dim = self.selector(env.observation_space.spaces).low.size
-        if not isinstance(env.action_space, Discrete):
+        self.is_discrete = isinstance(env.action_space, Discrete)
+        if not self.is_discrete:
             self.action_dim = env.action_space.low.size
         else:
             self.action_dim = env.action_space.n
