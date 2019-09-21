@@ -3,6 +3,7 @@
 
 from cs285.baselines.baseline import Baseline
 from cs285.distributions.continuous.gaussian import Gaussian
+from cs285.distributions.discrete.categorical import Categorical
 from cs285.networks import dense
 from cs285.data.replay_buffers.step_replay_buffer import StepReplayBuffer
 from cs285.core.savers.local_saver import LocalSaver
@@ -38,19 +39,22 @@ class BehaviorCloning(Baseline):
     def build(
             self
     ):
-        policy = Gaussian(
-            dense(
-                self.observation_dim,
-                self.action_dim,
-                hidden_size=self.hidden_size,
-                num_hidden_layers=self.num_hidden_layers),
-            std=self.exploration_noise_std)
+        policy = dense(
+            self.observation_dim,
+            self.action_dim,
+            hidden_size=self.hidden_size,
+            num_hidden_layers=self.num_hidden_layers)
 
-        expert_policy = Gaussian(
-            tf.keras.models.load_model(
-                self.expert_policy_ckpt,
-                compile=False),
-            std=self.exploration_noise_std)
+        expert_policy = tf.keras.models.load_model(
+            self.expert_policy_ckpt,
+            compile=False)
+
+        if self.is_discrete:
+            policy = Categorical(policy, temperature=self.exploration_noise_std)
+            expert_policy = Categorical(expert_policy, temperature=self.exploration_noise_std)
+        else:
+            policy = Gaussian(policy, std=self.exploration_noise_std)
+            expert_policy = Gaussian(expert_policy, std=self.exploration_noise_std)
     
         replay_buffer = StepReplayBuffer(
             max_num_steps=self.max_num_steps,

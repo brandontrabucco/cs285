@@ -49,6 +49,8 @@ class TD3(Baseline):
             *args,
             **kwargs)
 
+        assert not self.is_discrete
+
     def build(
             self
     ):
