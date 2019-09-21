@@ -18,6 +18,14 @@ class Gaussian(Distribution):
         Distribution.__init__(self, *args, **kwargs)
         self.std = std
 
+    def clone(
+        self,
+        *inputs
+    ):
+        # create an exact duplicate (different pointers) of the policy
+        return Gaussian(
+            tf.keras.models.clone_model(self.model), std=self.std)
+
     def get_parameters(
         self,
         *inputs

@@ -2,34 +2,33 @@
 
 
 import multiprocessing
-from cs285.baselines.sac import sac, sac_variant
+from cs285.baselines.off_policy.sac import SAC
 from gym.envs.mujoco.half_cheetah import HalfCheetahEnv
 
 
 def run_experiment(experiment_id):
-
-    sac_variant["logging_dir"] = "./half_cheetah/sac/{}".format(experiment_id)
-    sac_variant["hidden_size"] = 256
-    sac_variant["num_hidden_layers"] = 2
-    sac_variant["num_threads"] = 10
-    sac_variant["max_path_length"] = 1000
-    sac_variant["max_num_steps"] = 1000000
-    sac_variant["reward_scale"] = 1.0
-    sac_variant["discount"] = 0.99
-    sac_variant["tau"] = 0.005
-    sac_variant["policy_delay"] = 1
-    sac_variant["initial_alpha"] = 0.01
-    sac_variant["qf_learning_rate"] = 0.0003
-    sac_variant["policy_learning_rate"] = 0.0003
-    sac_variant["batch_size"] = 256
-    sac_variant["num_epochs"] = 10000
-    sac_variant["num_episodes_per_epoch"] = 1
-    sac_variant["num_trains_per_epoch"] = 1000
-    sac_variant["num_episodes_before_train"] = 10
-    sac_variant["num_epochs_per_eval"] = 10
-    sac_variant["num_episodes_per_eval"] = 10
-
-    sac(sac_variant, HalfCheetahEnv)
+    SAC(
+        HalfCheetahEnv,
+        logging_dir="./half_cheetah/sac/{}".format(experiment_id),
+        hidden_size=256,
+        num_hidden_layers=2,
+        num_threads=10,
+        max_path_length=1000,
+        max_num_steps=1000000,
+        reward_scale=1.0,
+        discount=0.99,
+        tau=0.005,
+        policy_delay=1,
+        initial_alpha=0.01,
+        qf_learning_rate=0.0003,
+        policy_learning_rate=0.0003,
+        batch_size=256,
+        num_epochs=10000,
+        num_episodes_per_epoch=1,
+        num_trains_per_epoch=1000,
+        num_episodes_before_train=10,
+        num_epochs_per_eval=10,
+        num_episodes_per_eval=10).launch()
 
 
 if __name__ == "__main__":

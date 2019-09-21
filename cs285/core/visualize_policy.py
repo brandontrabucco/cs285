@@ -2,7 +2,7 @@
 
 
 from cs285.data.envs.normalized_env import NormalizedEnv
-from cs285.distributions.gaussian import Gaussian
+from cs285.distributions.continuous.gaussian import Gaussian
 from cs285.data.samplers.simple_sampler import SimpleSampler
 import tensorflow as tf
 

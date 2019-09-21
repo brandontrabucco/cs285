@@ -1,7 +1,7 @@
 """Author: Brandon Trabucco, Copyright 2019, MIT License"""
 
 
-from cs285.distributions.gaussian import Gaussian
+from cs285.distributions.continuous.gaussian import Gaussian
 import tensorflow as tf
 import math
 
@@ -11,9 +11,18 @@ class TanhGaussian(Gaussian):
     def __init__(
         self,
         *args,
+        std=None,
         **kwargs
     ):
-        Gaussian.__init__(self, *args, **kwargs)
+        Gaussian.__init__(self, *args, std=std, **kwargs)
+
+    def clone(
+        self,
+        *inputs
+    ):
+        # create an exact duplicate (different pointers) of the policy
+        return TanhGaussian(
+            tf.keras.models.clone_model(self.model), std=self.std)
 
     def sample(
         self,

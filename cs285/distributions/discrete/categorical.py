@@ -17,6 +17,14 @@ class Categorical(Distribution):
         Distribution.__init__(self, *args, **kwargs)
         self.temperature = temperature
 
+    def clone(
+        self,
+        *inputs
+    ):
+        # create an exact duplicate (different pointers) of the policy
+        return Categorical(
+            tf.keras.models.clone_model(self.model), temperature=self.temperature)
+
     def get_parameters(
         self,
         *inputs

@@ -10,14 +10,13 @@ class SimpleSampler(Sampler):
     def __init__(
             self,
             make_env,
-            make_policy,
             master_policy,
             max_path_length=1000,
             selector=None,
             monitor=None
     ):
         self.env = make_env()
-        self.worker_policy = make_policy()
+        self.worker_policy = master_policy.clone()
         self.master_policy = master_policy
         self.max_path_length = max_path_length
         self.selector = selector if selector is not None else (lambda x: x)

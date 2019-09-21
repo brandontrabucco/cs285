@@ -36,6 +36,12 @@ class Distribution(ABC, tf.keras.models.Model):
             return self.__dict__[attr]
 
     @abstractmethod
+    def clone(
+        self,
+    ):
+        return NotImplemented
+
+    @abstractmethod
     def get_parameters(
         self,
         *inputs

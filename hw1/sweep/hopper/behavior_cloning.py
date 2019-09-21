@@ -2,31 +2,29 @@
 
 
 import multiprocessing
-from cs285.baselines.behavior_cloning import behavior_cloning, behavior_cloning_variant
+from cs285.baselines.imitate.behavior_cloning import BehaviorCloning
 from gym.envs.mujoco.hopper import HopperEnv
 
 
 def run_experiment(experiment_id):
-
     num_episodes = 2 * (1 + experiment_id)
-
-    behavior_cloning_variant["logging_dir"] = "./sweep/hopper/behavior_cloning/{}_episodes".format(num_episodes)
-    behavior_cloning_variant["hidden_size"] = 256
-    behavior_cloning_variant["num_hidden_layers"] = 2
-    behavior_cloning_variant["exploration_noise_std"] = 0.1
-    behavior_cloning_variant["expert_policy_ckpt"] = "./sweep/hopper/expert_policy.ckpt"
-    behavior_cloning_variant["num_threads"] = 10
-    behavior_cloning_variant["max_path_length"] = 1000
-    behavior_cloning_variant["max_num_steps"] = 1000000
-    behavior_cloning_variant["batch_size"] = 256
-    behavior_cloning_variant["num_epochs"] = 1000
-    behavior_cloning_variant["num_episodes_per_epoch"] = 0
-    behavior_cloning_variant["num_trains_per_epoch"] = 10
-    behavior_cloning_variant["num_episodes_before_train"] = num_episodes
-    behavior_cloning_variant["num_epochs_per_eval"] = 1
-    behavior_cloning_variant["num_episodes_per_eval"] = 10
-
-    behavior_cloning(behavior_cloning_variant, HopperEnv)
+    BehaviorCloning(
+        HopperEnv,
+        logging_dir="./sweep/hopper/behavior_cloning/{}_episodes".format(num_episodes),
+        hidden_size=256,
+        num_hidden_layers=2,
+        exploration_noise_std=0.1,
+        expert_policy_ckpt="./hopper/expert_policy.ckpt",
+        num_threads=10,
+        max_path_length=1000,
+        max_num_steps=1000000,
+        batch_size=256,
+        num_epochs=1000,
+        num_episodes_per_epoch=0,
+        num_trains_per_epoch=10,
+        num_episodes_before_train=num_episodes,
+        num_epochs_per_eval=1,
+        num_episodes_per_eval=10).launch()
 
 
 if __name__ == "__main__":
