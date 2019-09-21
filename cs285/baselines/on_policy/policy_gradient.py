@@ -2,6 +2,9 @@
 
 
 from cs285.baselines.baseline import Baseline
+from cs285.core.monitors.local_monitor import LocalMonitor
+from cs285.core.trainers.local_trainer import LocalTrainer
+from cs285.data.samplers.parallel_sampler import ParallelSampler
 from cs285.distributions.continuous.gaussian import Gaussian
 from cs285.distributions.discrete.categorical import Categorical
 from cs285.networks import dense
@@ -24,6 +27,15 @@ class PolicyGradient(Baseline):
             discount=0.99,
             policy_learning_rate=0.0003,
             batch_size=256,
+            logging_dir=".",
+            num_threads=10,
+            max_path_length=1000,
+            num_epochs=1000,
+            num_episodes_per_epoch=1,
+            num_trains_per_epoch=1,
+            num_episodes_before_train=0,
+            num_epochs_per_eval=1,
+            num_episodes_per_eval=1,
             **kwargs
     ):
         self.hidden_size = hidden_size
@@ -34,15 +46,26 @@ class PolicyGradient(Baseline):
         self.discount = discount
         self.policy_learning_rate = policy_learning_rate
         self.batch_size = batch_size
+        self.logging_dir = logging_dir
+        self.num_threads = num_threads
+        self.max_path_length = max_path_length
+        self.num_epochs = num_epochs
+        self.num_episodes_per_epoch = num_episodes_per_epoch
+        self.num_trains_per_epoch = num_trains_per_epoch
+        self.num_episodes_before_train = num_episodes_before_train
+        self.num_epochs_per_eval = num_epochs_per_eval
+        self.num_episodes_per_eval = num_episodes_per_eval
 
         Baseline.__init__(
             self,
             *args,
             **kwargs)
 
-    def build(
+    def launch(
             self
     ):
+        monitor = LocalMonitor(self.logging_dir)
+
         policy = dense(
             self.observation_dim,
             self.action_dim,
@@ -58,7 +81,7 @@ class PolicyGradient(Baseline):
             max_num_paths=self.max_num_paths,
             max_path_length=self.max_path_length,
             selector=self.selector,
-            monitor=self.monitor)
+            monitor=monitor)
 
         saver = LocalSaver(
             self.logging_dir,
@@ -72,6 +95,28 @@ class PolicyGradient(Baseline):
             policy_optimizer_class=tf.keras.optimizers.Adam,
             policy_optimizer_kwargs=dict(learning_rate=self.policy_learning_rate),
             batch_size=self.batch_size,
-            monitor=self.monitor)
+            monitor=monitor)
 
-        return policy, policy, policy, replay_buffer, algorithm, saver
+        sampler = ParallelSampler(
+            self.get_env,
+            policy,
+            num_threads=self.num_threads,
+            max_path_length=self.max_path_length,
+            selector=self.selector,
+            monitor=monitor)
+
+        LocalTrainer(
+            sampler,
+            sampler,
+            sampler,
+            replay_buffer,
+            algorithm,
+            num_epochs=self.num_epochs,
+            num_episodes_per_epoch=self.num_episodes_per_epoch,
+            num_trains_per_epoch=self.num_trains_per_epoch,
+            num_episodes_before_train=self.num_episodes_before_train,
+            num_epochs_per_eval=self.num_epochs_per_eval,
+            num_episodes_per_eval=self.num_episodes_per_eval,
+            saver=saver,
+            monitor=monitor).train()
+

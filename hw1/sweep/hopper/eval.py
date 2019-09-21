@@ -1,29 +1,24 @@
 """Author: Brandon Trabucco, Copyright 2019, MIT License"""
 
 
-from cs285.core.eval_policy import eval_policy, eval_policy_variant
+from cs285.baselines.evaluate_policy import EvaluatePolicy
 from gym.envs.mujoco.hopper import HopperEnv
 import argparse
 import matplotlib.pyplot as plt
-import copy
 import os
 
 
 def run_experiment(data_dir):
     mean_returns = []
     for num_episodes in [2, 4, 6, 8, 10]:
-        variant = copy.deepcopy(eval_policy_variant)
-
-        variant["policy_ckpt"] = os.path.join(
-            data_dir,
-            "{}_episodes/policy.ckpt".format(num_episodes))
-
-        variant["exploration_noise_std"] = 0.1
-        variant["num_threads"] = 10
-        variant["max_path_length"] = 1000
-        variant["num_episodes"] = 10
-
-        mean, std = eval_policy(variant, HopperEnv)
+        mean, std = EvaluatePolicy(
+            HopperEnv,
+            policy_ckpt=os.path.join(
+                data_dir,
+                "{}_episodes/policy.ckpt".format(num_episodes)),
+            num_threads=10,
+            max_path_length=1000,
+            num_episodes=10).launch()
         mean_returns.append(mean)
 
     plt.clf()

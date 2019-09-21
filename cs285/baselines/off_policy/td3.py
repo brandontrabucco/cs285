@@ -2,6 +2,9 @@
 
 
 from cs285.baselines.baseline import Baseline
+from cs285.core.monitors.local_monitor import LocalMonitor
+from cs285.core.trainers.local_trainer import LocalTrainer
+from cs285.data.samplers.parallel_sampler import ParallelSampler
 from cs285.distributions.continuous.gaussian import Gaussian
 from cs285.networks import dense
 from cs285.data.replay_buffers.step_replay_buffer import StepReplayBuffer
@@ -28,6 +31,15 @@ class TD3(Baseline):
             qf_learning_rate=0.0003,
             policy_learning_rate=0.0003,
             batch_size=256,
+            logging_dir=".",
+            num_threads=10,
+            max_path_length=1000,
+            num_epochs=1000,
+            num_episodes_per_epoch=1,
+            num_trains_per_epoch=1,
+            num_episodes_before_train=0,
+            num_epochs_per_eval=1,
+            num_episodes_per_eval=1,
             **kwargs
     ):
         self.hidden_size = hidden_size
@@ -43,6 +55,15 @@ class TD3(Baseline):
         self.qf_learning_rate = qf_learning_rate
         self.policy_learning_rate = policy_learning_rate
         self.batch_size = batch_size
+        self.logging_dir = logging_dir
+        self.num_threads = num_threads
+        self.max_path_length = max_path_length
+        self.num_epochs = num_epochs
+        self.num_episodes_per_epoch = num_episodes_per_epoch
+        self.num_trains_per_epoch = num_trains_per_epoch
+        self.num_episodes_before_train = num_episodes_before_train
+        self.num_epochs_per_eval = num_epochs_per_eval
+        self.num_episodes_per_eval = num_episodes_per_eval
 
         Baseline.__init__(
             self,
@@ -51,9 +72,11 @@ class TD3(Baseline):
 
         assert not self.is_discrete
 
-    def build(
+    def launch(
             self
     ):
+        monitor = LocalMonitor(self.logging_dir)
+
         policy = Gaussian(
             dense(
                 self.observation_dim,
@@ -81,7 +104,7 @@ class TD3(Baseline):
         replay_buffer = StepReplayBuffer(
             max_num_steps=self.max_num_steps,
             selector=self.selector,
-            monitor=self.monitor)
+            monitor=monitor)
 
         saver = LocalSaver(
             self.logging_dir,
@@ -110,6 +133,27 @@ class TD3(Baseline):
             policy_optimizer_class=tf.keras.optimizers.Adam,
             policy_optimizer_kwargs=dict(learning_rate=self.policy_learning_rate),
             batch_size=self.batch_size,
-            monitor=self.monitor)
+            monitor=monitor)
 
-        return policy, policy, policy, replay_buffer, algorithm, saver
+        sampler = ParallelSampler(
+            self.get_env,
+            policy,
+            num_threads=self.num_threads,
+            max_path_length=self.max_path_length,
+            selector=self.selector,
+            monitor=monitor)
+
+        LocalTrainer(
+            sampler,
+            sampler,
+            sampler,
+            replay_buffer,
+            algorithm,
+            num_epochs=self.num_epochs,
+            num_episodes_per_epoch=self.num_episodes_per_epoch,
+            num_trains_per_epoch=self.num_trains_per_epoch,
+            num_episodes_before_train=self.num_episodes_before_train,
+            num_epochs_per_eval=self.num_epochs_per_eval,
+            num_episodes_per_eval=self.num_episodes_per_eval,
+            saver=saver,
+            monitor=monitor).train()

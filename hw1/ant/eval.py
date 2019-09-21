@@ -1,20 +1,19 @@
 """Author: Brandon Trabucco, Copyright 2019, MIT License"""
 
 
-from cs285.core.eval_policy import eval_policy, eval_policy_variant
+from cs285.baselines.evaluate_policy import EvaluatePolicy
 from gym.envs.mujoco.ant import AntEnv
 import argparse
 
 
 def run_experiment(policy_ckpt):
 
-    eval_policy_variant["exploration_noise_std"] = 0.1
-    eval_policy_variant["policy_ckpt"] = policy_ckpt
-    eval_policy_variant["num_threads"] = 10
-    eval_policy_variant["max_path_length"] = 1000
-    eval_policy_variant["num_episodes"] = 10
-
-    mean, std = eval_policy(eval_policy_variant, AntEnv)
+    mean, std = EvaluatePolicy(
+        AntEnv,
+        policy_ckpt=policy_ckpt,
+        num_threads=10,
+        max_path_length=1000,
+        num_episodes=10).launch()
     print("mean: {} std: {}".format(mean, std))
 
 
